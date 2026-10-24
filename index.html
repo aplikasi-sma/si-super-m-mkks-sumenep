@@ -1,0 +1,3053 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SI-SUPER M | MKKS SMA SUMENEP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Times+New+Roman&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    
+    /* Authentic A4 Word Document Styling for Screen & Print */
+    @page {
+      size: A4 portrait;
+      margin: 20mm 20mm 20mm 20mm;
+    }
+    
+    /* Document preview stage */
+    .word-preview-stage {
+      background-color: #525659;
+      padding: 30px 15px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 25px;
+    }
+    
+    /* Individual A4 Word Paper Sheet */
+    .word-a4-sheet {
+      width: 210mm;
+      min-height: 297mm;
+      background: #ffffff;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), 0 2px 6px rgba(0, 0, 0, 0.15);
+      box-sizing: border-box;
+      padding: 25mm 20mm 25mm 25mm; /* Standar Margin Word: Atas 2.5cm, Kanan 2cm, Bawah 2.5cm, Kiri 2.5cm */
+      color: #000000;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 11pt;
+      line-height: 1.35;
+      position: relative;
+    }
+
+    .word-a4-sheet table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 10pt;
+    }
+
+    .word-a4-sheet th, 
+    .word-a4-sheet td {
+      border: 1px solid #000000;
+      padding: 5px 7px;
+      vertical-align: top;
+    }
+
+    .word-a4-sheet th {
+      background-color: #f1f5f9;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    @media print {
+      .no-print { display: none !important; }
+      body { 
+        background: #ffffff !important; 
+        color: #000000 !important; 
+        padding: 0 !important; 
+        margin: 0 !important; 
+      }
+      .word-preview-stage {
+        background: transparent !important;
+        padding: 0 !important;
+        gap: 0 !important;
+        display: block !important;
+      }
+      .word-a4-sheet { 
+        box-shadow: none !important; 
+        border: none !important; 
+        padding: 0 !important; 
+        margin: 0 !important; 
+        width: 100% !important; 
+        min-height: auto !important;
+        page-break-after: always;
+      }
+      .word-a4-sheet:last-child {
+        page-break-after: avoid;
+      }
+      table { page-break-inside: auto; }
+      tr { page-break-inside: avoid; page-break-after: auto; }
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+  </style>
+</head>
+<body class="bg-slate-100 min-h-screen flex flex-col text-slate-800">
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2 no-print pointer-events-none"></div>
+
+  <!-- CUSTOM CONFIRMATION MODAL -->
+  <div id="confirm-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-2xl shadow-xl border border-slate-200 max-w-md w-full p-6 transform transition-all">
+      <div class="flex items-center space-x-3 mb-3">
+        <div class="w-10 h-10 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-lg">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <h3 id="confirm-title" class="font-bold text-slate-800 text-lg">Konfirmasi Tindakan</h3>
+      </div>
+      <p id="confirm-message" class="text-sm text-slate-600 mb-6 leading-relaxed"></p>
+      <div class="flex justify-end space-x-3">
+        <button type="button" onclick="closeConfirmModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 text-sm font-semibold transition">
+          Batal
+        </button>
+        <button type="button" id="confirm-yes-btn" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold transition shadow-sm">
+          Ya, Lanjutkan
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGIN PAGE OVERLAY -->
+  <div id="login-overlay" class="fixed inset-0 bg-gradient-to-br from-emerald-950 via-emerald-900 to-slate-900 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl border border-emerald-800/20 max-w-md w-full p-8 relative overflow-hidden">
+      <!-- Decorative Header Badge -->
+      <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-emerald-500 via-amber-400 to-emerald-600"></div>
+      
+      <div class="text-center mb-6">
+        <div class="bg-white p-2.5 rounded-3xl w-28 h-28 mx-auto flex items-center justify-center shadow-lg border-2 border-amber-400 mb-3">
+          <img src="https://iili.io/nO0pE3F.jpg" alt="Logo MKKS SMA Sumenep" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/120x120/fbbf24/064e3b?text=MKKS';">
+        </div>
+        <span class="px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wider bg-emerald-100 text-emerald-800 rounded-md">MKKS SMA KABUPATEN SUMENEP</span>
+        <h1 class="font-extrabold text-2xl tracking-tight text-slate-900 mt-2">SI-SUPER M</h1>
+        <p class="text-xs text-slate-500 mt-0.5">Sistem Informasi Supervisi Pembelajaran Mendalam</p>
+      </div>
+
+      <form onsubmit="handleLogin(event)" class="space-y-4">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1 text-xs uppercase tracking-wider">Pilih Satuan Pendidikan / Username</label>
+          <select id="login-username" required class="w-full border border-slate-300 rounded-xl px-4 py-3 bg-slate-50 focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm font-semibold text-slate-800 cursor-pointer">
+            <option value="" disabled selected>-- Pilih Sekolah / Akun --</option>
+            <option value="superadmin">⭐ SUPER ADMIN MKKS</option>
+            <option value="smanbo123">SMA NEGERI 1 AMBUNTEN</option>
+            <option value="smanar342">SMA NEGERI 1 ARJASA</option>
+            <option value="bluto543">SMA NEGERI 1 BLUTO</option>
+            <option value="smaga743">SMA NEGERI 1 GAPURA</option>
+            <option value="gayam632">SMA NEGERI 1 GAYAM</option>
+            <option value="kalianget462">SMA NEGERI 1 KALIANGET</option>
+            <option value="smatulen123">SMA NEGERI 1 LENTENG</option>
+            <option value="masalembu273">SMA NEGERI 1 MASALEMBU</option>
+            <option value="sapeken251">SMA NEGERI 1 SAPEKEN</option>
+            <option value="smansa292">SMA NEGERI 1 SUMENEP</option>
+            <option value="smada848">SMA NEGERI 2 SUMENEP</option>
+            <option value="smaga383">SMA NEGERI 3 SUMENEP</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1 text-xs uppercase tracking-wider">Password Akses</label>
+          <div class="relative">
+            <input type="password" id="login-password" required placeholder="Masukkan password satuan pendidikan" class="w-full border border-slate-300 rounded-xl px-4 py-3 bg-slate-50 focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm">
+            <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-3.5 text-slate-400 hover:text-slate-600">
+              <i id="eye-icon" class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <div id="login-error" class="hidden p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-xl text-center font-semibold">
+          Password salah untuk sekolah yang dipilih. Silakan coba kembali.
+        </div>
+
+        <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-emerald-700/20 text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-right-to-bracket"></i> Masuk Aplikasi SI-SUPER M
+        </button>
+      </form>
+
+      <div class="mt-6 pt-4 border-t border-slate-100 text-center text-[11px] text-slate-400 space-y-0.5">
+        <div>Musyawarah Kerja Kepala Sekolah (MKKS) SMA Kabupaten Sumenep</div>
+        <div class="font-semibold text-slate-600">&copy; 2026 Firdausi</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN APP CONTAINER (HIDDEN UNTIL LOGIN) -->
+  <div id="app-main-layout" class="flex-1 flex flex-col lg:flex-row min-h-screen hidden overflow-hidden">
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="w-full lg:w-72 bg-emerald-950 text-white flex-shrink-0 no-print flex flex-col justify-between shadow-xl lg:h-screen lg:sticky lg:top-0 overflow-y-auto">
+      <div>
+        <!-- Brand Header with Larger Logo -->
+        <div class="p-5 border-b border-emerald-800/80 flex items-center justify-between">
+          <div class="flex items-center space-x-3.5">
+            <div class="bg-white p-2.5 rounded-2xl w-20 h-20 flex items-center justify-center shadow-lg flex-shrink-0 overflow-hidden border-2 border-amber-400">
+              <img src="https://iili.io/nO0pE3F.jpg" alt="Logo MKKS SMA Sumenep" class="w-full h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/120x120/fbbf24/064e3b?text=MKKS';">
+            </div>
+            <div>
+              <span class="px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider bg-amber-400/20 text-amber-300 rounded-md border border-amber-400/30">MKKS SMA SUMENEP</span>
+              <h1 class="font-extrabold text-xl tracking-tight text-white mt-0.5">SI-SUPER M</h1>
+              <p class="text-[11px] text-emerald-300 leading-tight">Supervisi Pembelajaran Mendalam</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Active School Badge -->
+        <div class="px-4 pt-3 pb-1">
+          <div class="bg-emerald-900/90 border border-emerald-700/80 rounded-xl p-2.5 text-xs flex items-center justify-between">
+            <div class="truncate">
+              <div class="text-[10px] font-bold text-amber-300 uppercase tracking-wider">Satuan Pendidikan Login:</div>
+              <div id="sidebar-active-school" class="font-extrabold text-white truncate">-</div>
+            </div>
+            <button onclick="handleLogout()" class="ml-2 px-2 py-1 bg-rose-900/60 hover:bg-rose-800 text-rose-200 rounded-lg text-[10px] font-bold transition flex-shrink-0" title="Keluar Akun">
+              <i class="fa-solid fa-power-off"></i> Keluar
+            </button>
+          </div>
+        </div>
+
+        <!-- Navigation Menu -->
+        <nav class="p-4 space-y-1.5">
+          <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl bg-emerald-800 text-white font-semibold text-sm transition shadow-sm">
+            <i class="fa-solid fa-chart-pie w-5 text-center text-amber-400"></i>
+            <span>Dashboard Utama</span>
+          </button>
+          <button onclick="switchTab('guru')" id="nav-guru" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-emerald-100 hover:bg-emerald-900 font-medium text-sm transition">
+            <i class="fa-solid fa-chalkboard-user w-5 text-center text-emerald-400"></i>
+            <span>Data Guru & Sekolah</span>
+          </button>
+          <button onclick="switchTab('supervisi')" id="nav-supervisi" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-emerald-100 hover:bg-emerald-900 font-medium text-sm transition">
+            <i class="fa-solid fa-clipboard-check w-5 text-center text-emerald-400"></i>
+            <span>Input Hasil Supervisi</span>
+          </button>
+          <button onclick="switchTab('daftarsupervisi')" id="nav-daftarsupervisi" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-emerald-100 hover:bg-emerald-900 font-medium text-sm transition">
+            <i class="fa-solid fa-list-check w-5 text-center text-emerald-400"></i>
+            <span>Daftar Hasil Supervisi</span>
+          </button>
+          <button onclick="switchTab('laporan')" id="nav-laporan" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-emerald-100 hover:bg-emerald-900 font-medium text-sm transition">
+            <i class="fa-solid fa-file-signature w-5 text-center text-emerald-400"></i>
+            <span>Laporan & Cetak RTL</span>
+          </button>
+          <button onclick="switchTab('superadmin')" id="nav-superadmin" class="hidden w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-amber-200 hover:bg-emerald-900 font-semibold text-sm transition border border-amber-400/40 bg-amber-400/10">
+            <i class="fa-solid fa-crown w-5 text-center text-amber-400"></i>
+            <span>Panel Super Admin</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Local Database Controls -->
+      <div class="p-4 m-4 rounded-xl bg-emerald-900/70 border border-emerald-800 space-y-2.5">
+        <div class="flex items-center justify-between text-xs text-emerald-200 font-semibold">
+          <span><i class="fa-solid fa-cloud-arrow-up mr-1.5 text-amber-400"></i>SYNC CLOUD</span>
+          <span id="db-status-badge" class="px-2 py-0.5 bg-emerald-800 text-emerald-300 rounded text-[10px]">Aktif</span>
+        </div>
+        <button onclick="manualSyncFromCloud()" class="w-full bg-emerald-800 hover:bg-emerald-700 text-amber-300 hover:text-white text-xs py-2 px-3 rounded-lg text-center flex items-center justify-center gap-1.5 font-bold transition border border-emerald-700 shadow-sm">
+          <i class="fa-solid fa-arrows-rotate mr-1"></i> Tarik Data Guru dari Sheets
+        </button>
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="exportDatabase()" class="bg-emerald-800/90 hover:bg-emerald-700 text-xs py-2 px-3 rounded-lg text-center flex items-center justify-center gap-1.5 font-medium transition border border-emerald-700">
+            <i class="fa-solid fa-download text-amber-300"></i> Backup JSON
+          </button>
+          <label class="bg-emerald-800/90 hover:bg-emerald-700 text-xs py-2 px-3 rounded-lg text-center flex items-center justify-center gap-1.5 font-medium cursor-pointer transition border border-emerald-700">
+            <i class="fa-solid fa-upload text-emerald-300"></i> Restore
+            <input type="file" id="importFile" class="hidden" accept=".json" onchange="importDatabase(event)">
+          </label>
+        </div>
+        <button onclick="confirmResetDatabase()" class="w-full bg-rose-900/70 hover:bg-rose-800 text-rose-100 text-xs py-2 px-3 rounded-lg text-center font-medium transition border border-rose-800/60">
+          <i class="fa-solid fa-rotate-left mr-1"></i> Muat Ulang Data Contoh
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-1 p-4 md:p-7 h-screen overflow-y-auto">
+      <header class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 mb-6 flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 no-print">
+        <div class="flex items-center gap-4">
+          <img id="header-school-logo" src="https://iili.io/nO0pE3F.jpg" alt="Logo Sekolah" class="w-20 h-20 object-contain rounded-xl border border-slate-200 p-1 bg-white shadow-sm hidden sm:block" onerror="this.onerror=null;this.src='https://placehold.co/120x120/064e3b/ffffff?text=LOGO';">
+          <div>
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="px-2.5 py-0.5 text-xs font-bold bg-emerald-100 text-emerald-800 rounded-full">MKKS SMA Kabupaten Sumenep</span>
+              <span id="header-tapel" class="px-2.5 py-0.5 text-xs font-bold bg-amber-100 text-amber-800 rounded-full border border-amber-300"></span>
+            </div>
+            <h2 id="page-title" class="text-xl md:text-2xl font-extrabold text-slate-800 mt-1">Dashboard Supervisi Pembelajaran Mendalam</h2>
+            <p id="school-subtitle" class="text-sm text-slate-500 font-medium">-</p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3 w-full xl:w-auto justify-between xl:justify-end">
+          <!-- Quick Period Switcher -->
+          <div class="flex items-center bg-emerald-50 border border-emerald-200 px-3.5 py-2 rounded-xl gap-2.5">
+            <div class="text-emerald-700 text-base"><i class="fa-solid fa-calendar-check"></i></div>
+            <div>
+              <label for="quick-period-select" class="block text-[10px] font-bold uppercase tracking-wider text-emerald-700">Periode Penilaian Aktif</label>
+              <select id="quick-period-select" onchange="switchActivePeriod(this.value)" class="bg-transparent font-extrabold text-slate-800 text-xs md:text-sm focus:outline-none cursor-pointer pr-2"></select>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-3 bg-slate-50 border border-slate-200 px-4 py-2 rounded-xl">
+            <div class="w-9 h-9 rounded-xl bg-emerald-700 text-white flex items-center justify-center text-base">
+              <i class="fa-solid fa-user-tie"></i>
+            </div>
+            <div class="text-xs">
+              <div class="text-slate-400 font-medium">Kepala Sekolah / Supervisor</div>
+              <div id="header-ks" class="font-bold text-slate-800 text-sm">-</div>
+              <div id="header-nip" class="text-[11px] text-slate-500">-</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- ========================================== -->
+      <!-- 1. SECTION: DASHBOARD UTAMA                -->
+      <!-- ========================================== -->
+      <section id="sec-dashboard" class="space-y-6">
+        <!-- Welcome Banner -->
+        <div class="bg-gradient-to-r from-emerald-900 via-emerald-800 to-teal-900 rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row justify-between items-center gap-6">
+          <div class="absolute right-0 top-0 bottom-0 w-1/3 bg-white/5 skew-x-12 pointer-events-none"></div>
+          <div class="space-y-2 z-10 text-center md:text-left">
+            <span class="px-3 py-1 bg-amber-400/20 border border-amber-400/40 text-amber-300 rounded-full text-xs font-extrabold tracking-wider uppercase">
+              <i class="fa-solid fa-shield-heart mr-1.5 text-amber-400"></i> Sistem Penjaminan Mutu Internal
+            </span>
+            <h3 class="text-2xl md:text-3xl font-black tracking-tight text-white mt-1">Selamat Datang di SI-SUPER M</h3>
+            <p class="text-emerald-200 text-xs md:text-sm max-w-2xl leading-relaxed">
+              Platform digital resmi Musyawarah Kerja Kepala Sekolah (MKKS) SMA Kabupaten Sumenep untuk pengelolaan instrumen telaah perencanaan, observasi pelaksanaan, serta evaluasi, refleksi, dan tindak lanjut pembelajaran mendalam.
+            </p>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-3 z-10 flex-shrink-0 w-full md:w-auto">
+            <button onclick="switchTab('supervisi')" class="bg-amber-400 hover:bg-amber-500 text-emerald-950 font-extrabold px-6 py-3.5 rounded-2xl text-xs md:text-sm shadow-lg transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-clipboard-check text-base"></i> Input Supervisi Baru
+            </button>
+            <button onclick="switchTab('laporan')" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold px-6 py-3.5 rounded-2xl text-xs md:text-sm backdrop-blur transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-file-contract text-base"></i> Cetak Laporan
+            </button>
+          </div>
+        </div>
+
+        <!-- KPI Summary Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center space-x-4 hover:shadow-md transition">
+            <div class="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-xl flex-shrink-0 border border-emerald-100 shadow-sm">
+              <i class="fa-solid fa-chalkboard-user"></i>
+            </div>
+            <div>
+              <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Pendidik</div>
+              <div id="stat-guru" class="text-2xl font-black text-slate-900 mt-0.5">0</div>
+              <div id="guru-count-badge" class="text-[11px] font-bold text-emerald-700 mt-0.5">0 Guru Terdaftar</div>
+            </div>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center space-x-4 hover:shadow-md transition">
+            <div class="w-14 h-14 rounded-2xl bg-blue-50 text-blue-700 flex items-center justify-center text-xl flex-shrink-0 border border-blue-100 shadow-sm">
+              <i class="fa-solid fa-clipboard-check"></i>
+            </div>
+            <div>
+              <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Sudah Disupervisi</div>
+              <div id="stat-supervisi" class="text-2xl font-black text-slate-900 mt-0.5">0</div>
+              <div class="text-[11px] font-bold text-blue-700 mt-0.5" id="dash-period-badge">TP Aktif</div>
+            </div>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center space-x-4 hover:shadow-md transition">
+            <div class="w-14 h-14 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl flex-shrink-0 border border-rose-100 shadow-sm">
+              <i class="fa-solid fa-user-clock"></i>
+            </div>
+            <div>
+              <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Belum Disupervisi</div>
+              <div id="stat-belum-supervisi" class="text-2xl font-black text-rose-600 mt-0.5">0</div>
+              <div id="belum-supervisi-badge" class="text-[11px] font-bold text-rose-700 mt-0.5">Perlu Dijadwalkan</div>
+            </div>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center space-x-4 hover:shadow-md transition">
+            <div class="w-14 h-14 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center text-xl flex-shrink-0 border border-amber-100 shadow-sm">
+              <i class="fa-solid fa-star"></i>
+            </div>
+            <div>
+              <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Rata-Rata Skor</div>
+              <div id="stat-rata" class="text-2xl font-black text-slate-900 mt-0.5">0</div>
+              <div class="text-[11px] font-bold text-amber-700 mt-0.5">Skala Maks 100</div>
+            </div>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center space-x-4 hover:shadow-md transition">
+            <div class="w-14 h-14 rounded-2xl bg-purple-50 text-purple-700 flex items-center justify-center text-xl flex-shrink-0 border border-purple-100 shadow-sm">
+              <i class="fa-solid fa-award"></i>
+            </div>
+            <div>
+              <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Predikat Dominan</div>
+              <div id="stat-predikat" class="text-lg font-black text-slate-900 mt-1 truncate max-w-[130px]" title="-">-</div>
+              <div class="text-[11px] font-bold text-purple-700 mt-0.5">Evaluasi Mutu</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Charts & Analytics Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Chart 1: Perbandingan Skor per Guru -->
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 lg:col-span-2 flex flex-col justify-between">
+            <div class="flex justify-between items-center mb-6">
+              <div>
+                <h3 class="font-extrabold text-slate-900 text-base">Grafik Skor Akhir Pendidik</h3>
+                <p class="text-xs text-slate-500">Perbandingan skor supervisi akademik seluruh guru pada periode aktif</p>
+              </div>
+              <span class="px-3 py-1 bg-emerald-50 text-emerald-800 text-xs font-bold rounded-lg border border-emerald-200">
+                <i class="fa-solid fa-chart-column mr-1.5"></i> Bar Chart
+              </span>
+            </div>
+            <div id="bar-chart-container" class="h-64 w-full flex items-end gap-3 px-2 pt-6 pb-2 border-b border-slate-200">
+              <!-- Diisi dinamis via JS -->
+            </div>
+            <div class="flex justify-between items-center mt-4 text-[11px] text-slate-500 font-medium">
+              <span>* Skor dihitung dari rata-rata Telaah Perencanaan & Observasi Pelaksanaan</span>
+              <span class="font-bold text-emerald-800">Standar Baik: ≥ 71</span>
+            </div>
+          </div>
+
+          <!-- Chart 2: Distribusi Predikat Mutu -->
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-4">
+                <h3 class="font-extrabold text-slate-900 text-base">Distribusi Predikat</h3>
+                <span class="text-xs text-slate-500 font-semibold">Persentase</span>
+              </div>
+              <p class="text-xs text-slate-500 mb-6">Proporsi pencapaian mutu guru berdasarkan kategori predikat.</p>
+            </div>
+            <div id="predikat-bars-container" class="space-y-4 my-auto">
+              <!-- Diisi dinamis via JS -->
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-100 text-center">
+              <button onclick="switchTab('daftarsupervisi')" class="text-xs font-bold text-emerald-700 hover:text-emerald-800 hover:underline">
+                Lihat Seluruh Rekaman Data &rarr;
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Supervision Table -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-5 gap-2">
+            <div>
+              <h3 class="font-extrabold text-slate-900 text-base">Rekaman Hasil Supervisi Terbaru</h3>
+              <p class="text-xs text-slate-500">Daftar supervisi akademik yang baru saja dilakukan pada satuan pendidikan.</p>
+            </div>
+            <button onclick="switchTab('daftarsupervisi')" class="text-xs font-extrabold text-emerald-700 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100 px-3.5 py-2 rounded-xl transition border border-emerald-200">
+              Lihat Semua Daftar (<span id="stat-supervisi-badge">0</span>) &rarr;
+            </button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-sm">
+              <thead>
+                <tr class="bg-slate-50 text-slate-600 border-y border-slate-200 text-xs uppercase">
+                  <th class="py-3 px-3">No</th>
+                  <th class="py-3 px-3">Pendidik</th>
+                  <th class="py-3 px-3 text-center">Skor & Predikat</th>
+                  <th class="py-3 px-3">Topik & Temuan RTL</th>
+                  <th class="py-3 px-3 text-center">Aksi Cepat</th>
+                </tr>
+              </thead>
+              <tbody id="dashboard-table-body" class="divide-y divide-slate-200/80 text-xs"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- 2. SECTION: DATA GURU & SEKOLAH            -->
+      <!-- ========================================== -->
+      <section id="sec-guru" class="hidden space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Form Pengaturan Sekolah & Periode -->
+          <div class="space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+              <h3 class="font-extrabold text-slate-900 text-base mb-4 pb-3 border-b border-slate-100 flex items-center gap-2">
+                <i class="fa-solid fa-school text-emerald-700"></i> Identitas Sekolah & Logo
+              </h3>
+              
+              <!-- Fitur Ganti Logo Sekolah -->
+              <div class="mb-5 p-3.5 bg-slate-50 border border-slate-200 rounded-2xl">
+                <label class="block font-bold text-slate-700 mb-2 text-xs uppercase tracking-wider">Logo Satuan Pendidikan</label>
+                <div class="flex items-center gap-4">
+                  <div class="w-20 h-20 bg-white rounded-xl border-2 border-emerald-600/30 p-1.5 flex items-center justify-center flex-shrink-0 shadow-sm overflow-hidden">
+                    <img id="logo-preview" src="https://iili.io/nO0pE3F.jpg" alt="Preview Logo" class="max-w-full max-h-full object-contain" onerror="this.onerror=null;this.src='https://placehold.co/120x120/064e3b/ffffff?text=LOGO';">
+                  </div>
+                  <div class="space-y-2 flex-1">
+                    <label class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold cursor-pointer transition shadow-sm">
+                      <i class="fa-solid fa-camera"></i> Unggah Gambar Logo
+                      <input type="file" id="upload-logo-file" accept="image/*" class="hidden" onchange="handleLogoUpload(event)">
+                    </label>
+                    <button type="button" onclick="resetDefaultLogo()" class="inline-block text-[11px] text-slate-500 hover:text-rose-600 font-semibold underline block">
+                      Kembalikan ke Logo Default MKKS
+                    </button>
+                    <p class="text-[10px] text-slate-400">Format: PNG, JPG, JPEG (Maks. 1MB)</p>
+                  </div>
+                </div>
+              </div>
+
+              <form onsubmit="saveSchoolSettings(event)" class="space-y-4 text-xs">
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">Nama Satuan Pendidikan</label>
+                  <input type="text" id="set-sekolah" required class="w-full border border-slate-300 rounded-xl px-3 py-2.5 bg-slate-50 font-semibold text-slate-800">
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">Nama Kepala Sekolah</label>
+                  <input type="text" id="set-ks" required class="w-full border border-slate-300 rounded-xl px-3 py-2.5 bg-slate-50 font-semibold text-slate-800">
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">NIP Kepala Sekolah</label>
+                  <input type="text" id="set-nip-ks" required class="w-full border border-slate-300 rounded-xl px-3 py-2.5 bg-slate-50 font-semibold text-slate-800">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">Tahun Pelajaran</label>
+                    <input type="text" id="set-tapel" required class="w-full border border-slate-300 rounded-xl px-3 py-2.5 bg-slate-50 font-semibold text-slate-800">
+                  </div>
+                  <div>
+                    <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">Semester</label>
+                    <select id="set-semester" class="w-full border border-slate-300 rounded-xl px-3 py-2.5 bg-slate-50 font-semibold text-slate-800 cursor-pointer">
+                      <option value="Ganjil">Ganjil</option>
+                      <option value="Genap">Genap</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">Tanggal & Tempat Laporan</label>
+                  <input type="text" id="set-tanggal-laporan" required class="w-full border border-slate-300 rounded-xl px-3 py-2.5 bg-slate-50 font-semibold text-slate-800">
+                </div>
+                <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-xl transition shadow-sm">
+                  Simpan Identitas Sekolah
+                </button>
+              </form>
+            </div>
+
+            <!-- Manajer Periode Penilaian -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+              <h3 class="font-extrabold text-slate-900 text-base mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-calendar-days text-amber-600"></i> Pengaturan Periode Penilaian
+              </h3>
+              <p class="text-xs text-slate-500 mb-4">Buat atau aktifkan periode penilaian baru agar rekapitulasi tersimpan terpisah tiap semester.</p>
+              
+              <form onsubmit="addNewPeriod(event)" class="space-y-3 text-xs mb-4">
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">Tahun Pelajaran</label>
+                    <input type="text" id="new-period-tapel" placeholder="Contoh: 2026/2027" required class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-slate-50 font-medium">
+                  </div>
+                  <div>
+                    <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">Semester</label>
+                    <select id="new-period-sem" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-slate-50 font-medium cursor-pointer">
+                      <option value="Ganjil">Ganjil</option>
+                      <option value="Genap">Genap</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">Tanggal & Tempat Dokumen</label>
+                  <input type="text" id="new-period-tgl" placeholder="Contoh: Sumenep, 24 Oktober 2026" class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-slate-50 font-medium">
+                </div>
+                <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold py-2.5 rounded-xl transition shadow-sm flex items-center justify-center gap-1.5">
+                  <i class="fa-solid fa-plus mr-1"></i> Tambah & Aktifkan Periode
+                </button>
+              </form>
+
+              <div class="space-y-2 pt-3 border-t border-slate-100">
+                <div class="flex items-center justify-between">
+                  <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Daftar Periode Tersimpan:</div>
+                  <span id="period-count-badge" class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-bold">0 Periode</span>
+                </div>
+                <div id="period-list-container" class="space-y-2 max-h-52 overflow-y-auto pr-1"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Form & Daftar Guru -->
+          <div class="lg:col-span-2 space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+              <h3 class="font-extrabold text-slate-900 text-base mb-4 pb-3 border-b border-slate-100 flex items-center gap-2">
+                <i class="fa-solid fa-user-plus text-emerald-700"></i> Tambah Data Pendidik (Guru)
+              </h3>
+              <form onsubmit="addTeacher(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">Nama Lengkap & Gelar</label>
+                  <input type="text" id="guru-nama" required placeholder="Contoh: Ibu Ani, S.Pd." class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 bg-slate-50 font-medium">
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">NIP / NUPTK</label>
+                  <input type="text" id="guru-nip" placeholder="19840312..." class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 bg-slate-50 font-medium">
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">Mata Pelajaran</label>
+                  <input type="text" id="guru-mapel" required placeholder="Contoh: Bahasa Indonesia" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 bg-slate-50 font-medium">
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">Kelas / Fase</label>
+                  <input type="text" id="guru-kelas" required placeholder="Contoh: X-1 (Fase E)" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 bg-slate-50 font-medium">
+                </div>
+                <div class="md:col-span-2 flex justify-end pt-2">
+                  <button type="submit" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-6 py-3 rounded-xl transition shadow-sm flex items-center gap-2">
+                    <i class="fa-solid fa-user-plus"></i> Simpan Data Pendidik
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+              <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
+                <div>
+                  <h3 class="font-extrabold text-slate-900 text-base">Daftar Pendidik Terdaftar</h3>
+                  <p class="text-xs text-slate-500">Data guru yang terhubung dengan akun sekolah dan tersinkronisasi ke Google Spreadsheet.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button type="button" onclick="manualSyncFromCloud()" class="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-cloud-arrow-down"></i> Muat dari Spreadsheet
+                  </button>
+                  <span class="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full"><span id="stat-guru-badge">0</span> Orang Guru</span>
+                </div>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr class="bg-slate-50 text-slate-600 border-y border-slate-200 uppercase">
+                      <th class="py-3 px-3">No</th>
+                      <th class="py-3 px-3">Nama Pendidik</th>
+                      <th class="py-3 px-3">NIP</th>
+                      <th class="py-3 px-3">Mata Pelajaran</th>
+                      <th class="py-3 px-3">Kelas</th>
+                      <th class="py-3 px-3 text-center">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="guru-table-body" class="divide-y divide-slate-200"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- 3. SECTION: INPUT HASIL SUPERVISI          -->
+      <!-- ========================================== -->
+      <section id="sec-supervisi" class="hidden space-y-6">
+        <form onsubmit="saveSupervisi(event)" class="space-y-6">
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+            <h3 class="font-extrabold text-slate-900 text-base mb-4 pb-3 border-b border-slate-100 flex items-center justify-between">
+              <span><i class="fa-solid fa-clipboard-check text-emerald-700 mr-2"></i>Parameter Pelaksanaan Supervisi Akademik</span>
+              <span id="live-score-badge" class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-black rounded-full border border-amber-300">
+                Skor Estimasi: <span id="live-score-preview">0</span>
+              </span>
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+              <div>
+                <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">Pilih Guru / Pendidik</label>
+                <select id="sup-guru-id" required class="w-full border border-slate-300 rounded-xl px-3.5 py-3 bg-slate-50 font-semibold text-slate-800 cursor-pointer"></select>
+              </div>
+              <div>
+                <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">Periode Penilaian</label>
+                <select id="sup-periode" required class="w-full border border-slate-300 rounded-xl px-3.5 py-3 bg-slate-50 font-semibold text-slate-800 cursor-pointer"></select>
+              </div>
+              <div>
+                <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">Tanggal Pelaksanaan</label>
+                <input type="date" id="sup-tanggal" required class="w-full border border-slate-300 rounded-xl px-3.5 py-3 bg-slate-50 font-semibold text-slate-800">
+              </div>
+              <div>
+                <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">Topik / Materi Pembelajaran</label>
+                <input type="text" id="sup-topik" required placeholder="Contoh: Aljabar Kontekstual & KKA" class="w-full border border-slate-300 rounded-xl px-3.5 py-3 bg-slate-50 font-semibold text-slate-800">
+              </div>
+            </div>
+          </div>
+
+          <!-- Instrument Tabs Container -->
+          <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
+            <!-- Subtab Navigation -->
+            <div class="flex flex-col sm:flex-row border-b border-slate-200 bg-slate-50/80">
+              <button type="button" onclick="switchSubTab('telaah')" id="subtab-telaah" class="flex-1 py-4 px-4 text-xs md:text-sm font-bold border-b-2 border-emerald-600 text-emerald-800 bg-white transition">
+                <i class="fa-solid fa-file-lines mr-1.5"></i> 1. Telaah Perencanaan (Lampiran 5)
+              </button>
+              <button type="button" onclick="switchSubTab('observasi')" id="subtab-observasi" class="flex-1 py-4 px-4 text-xs md:text-sm font-semibold text-slate-600 hover:text-slate-800 transition">
+                <i class="fa-solid fa-eye mr-1.5"></i> 2. Observasi Pelaksanaan (Lampiran 6)
+              </button>
+              <button type="button" onclick="switchSubTab('rtl')" id="subtab-rtl" class="flex-1 py-4 px-4 text-xs md:text-sm font-semibold text-slate-600 hover:text-slate-800 transition">
+                <i class="fa-solid fa-arrows-spin mr-1.5"></i> 3. Evaluasi, Refleksi & RTL (Lampiran 3)
+              </button>
+            </div>
+
+            <!-- SUBSECTION 1: TELAAH PERENCANAAN -->
+            <div id="subsec-telaah" class="p-6 space-y-6">
+              <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl text-xs text-emerald-900 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div>
+                  <strong>Skala Penilaian Telaah (0-4):</strong> 0 = Tidak ada, 1 = Sangat kurang, 2 = Kurang, 3 = Baik, 4 = Sangat baik.
+                </div>
+                <div class="flex gap-2 flex-shrink-0">
+                  <button type="button" onclick="fillDefaultScores('telaah', 3)" class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg font-bold transition">
+                    Set Semua "3 (Baik)"
+                  </button>
+                  <button type="button" onclick="fillDefaultScores('telaah', 4)" class="px-3 py-1.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-lg font-bold transition">
+                    Set Semua "4 (Sangat Baik)"
+                  </button>
+                </div>
+              </div>
+
+              <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr class="bg-slate-50 text-slate-600 border-y border-slate-200 uppercase">
+                      <th class="py-3 px-3 w-12 text-center">No</th>
+                      <th class="py-3 px-3">Aspek yang Diamati (Telaah Perencanaan Pembelajaran)</th>
+                      <th class="py-3 px-3 w-48 text-center">Skala (0 - 4)</th>
+                      <th class="py-3 px-3 w-72">Komentar Kritis</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbody-telaah" class="divide-y divide-slate-200"></tbody>
+                </table>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-slate-100 text-xs">
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">16. Kelebihan Perencanaan:</label>
+                  <textarea id="telaah-kelebihan" rows="3" class="w-full border border-slate-300 rounded-xl p-3 bg-slate-50" placeholder="Tuliskan kelebihan..."></textarea>
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">17. Hal yang Perlu Ditingkatkan:</label>
+                  <textarea id="telaah-tingkatkan" rows="3" class="w-full border border-slate-300 rounded-xl p-3 bg-slate-50" placeholder="Tuliskan hal yang perlu ditingkatkan..."></textarea>
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">18. Rekomendasi Sesuai Prinsip PM & KKA:</label>
+                  <textarea id="telaah-rekomendasi" rows="3" class="w-full border border-slate-300 rounded-xl p-3 bg-slate-50" placeholder="Tuliskan rekomendasi revisi..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- SUBSECTION 2: OBSERVASI PELAKSANAAN -->
+            <div id="subsec-observasi" class="p-6 space-y-6 hidden">
+              <div class="bg-blue-50 border border-blue-200 p-4 rounded-xl text-xs text-blue-900 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div>
+                  <strong>Skala Penilaian Observasi (0-4):</strong> 0 = Tidak ada, 1 = Sangat kurang, 2 = Kurang, 3 = Baik, 4 = Sangat baik.
+                </div>
+                <div class="flex gap-2 flex-shrink-0">
+                  <button type="button" onclick="fillDefaultScores('obs', 3)" class="px-3 py-1.5 bg-blue-700 hover:bg-blue-800 text-white rounded-lg font-bold transition">
+                    Set Semua "3 (Baik)"
+                  </button>
+                  <button type="button" onclick="fillDefaultScores('obs', 4)" class="px-3 py-1.5 bg-blue-800 hover:bg-blue-900 text-white rounded-lg font-bold transition">
+                    Set Semua "4 (Sangat Baik)"
+                  </button>
+                </div>
+              </div>
+
+              <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr class="bg-slate-50 text-slate-600 border-y border-slate-200 uppercase">
+                      <th class="py-3 px-3 w-12 text-center">No</th>
+                      <th class="py-3 px-3">Aspek yang Diamati (Observasi Pelaksanaan Pembelajaran)</th>
+                      <th class="py-3 px-3 w-48 text-center">Skala (0 - 4)</th>
+                      <th class="py-3 px-3 w-52">Bukti Pembelajaran</th>
+                      <th class="py-3 px-3 w-52">Catatan</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbody-observasi" class="divide-y divide-slate-200"></tbody>
+                </table>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-slate-100 text-xs">
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">16. Kelebihan Pelaksanaan:</label>
+                  <textarea id="obs-kelebihan" rows="3" class="w-full border border-slate-300 rounded-xl p-3 bg-slate-50" placeholder="Tuliskan kelebihan..."></textarea>
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">17. Hal yang Perlu Ditingkatkan:</label>
+                  <textarea id="obs-tingkatkan" rows="3" class="w-full border border-slate-300 rounded-xl p-3 bg-slate-50" placeholder="Tuliskan hal yang perlu ditingkatkan..."></textarea>
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">18. Rekomendasi Sesuai Prinsip PM & KKA:</label>
+                  <textarea id="obs-rekomendasi" rows="3" class="w-full border border-slate-300 rounded-xl p-3 bg-slate-50" placeholder="Tuliskan rekomendasi revisi..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- SUBSECTION 3: EVALUASI, REFLEKSI & RTL -->
+            <div id="subsec-rtl" class="p-6 space-y-6 hidden">
+              <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl text-xs text-amber-900 flex flex-col sm:flex-row justify-between items-center gap-3">
+                <div>
+                  <strong>Preset Cepat Isian RTL:</strong> Pilih temuan umum berdasarkan modul pelatihan supervisi pembelajaran mendalam.
+                </div>
+                <div class="flex flex-wrap gap-2">
+                  <button type="button" onclick="fillPresetRTL('keterlibatan')" class="px-2.5 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-bold text-[11px] transition">Keterlibatan Rendah</button>
+                  <button type="button" onclick="fillPresetRTL('kontekstual')" class="px-2.5 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-bold text-[11px] transition">Belum Kontekstual</button>
+                  <button type="button" onclick="fillPresetRTL('hots')" class="px-2.5 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-bold text-[11px] transition">Asesmen LOTS</button>
+                  <button type="button" onclick="fillPresetRTL('kka')" class="px-2.5 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-bold text-[11px] transition">Belum Ada KKA</button>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">Catatan Temuan Evaluasi Utama</label>
+                  <input type="text" id="rtl-temuan" required placeholder="Contoh: keterlibatan murid rendah" class="w-full border border-slate-300 rounded-xl p-3 bg-slate-50 font-medium">
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">Refleksi (Analisis Penyebab Masalah)</label>
+                  <input type="text" id="rtl-refleksi" required placeholder="Contoh: Aktivitas pembelajaran kurang variatif, dominan ceramah" class="w-full border border-slate-300 rounded-xl p-3 bg-slate-50 font-medium">
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">Tindak Lanjut (Perbaikan Spesifik)</label>
+                  <input type="text" id="rtl-tindaklanjut" required placeholder="Contoh: Menerapkan diskusi kelompok, ice breaking, pertanyaan terbuka" class="w-full border border-slate-300 rounded-xl p-3 bg-slate-50 font-medium">
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">Peran Kepala Sekolah (Pendampingan)</label>
+                  <input type="text" id="rtl-peranks" required placeholder="Contoh: Coaching & modeling pembelajaran aktif" class="w-full border border-slate-300 rounded-xl p-3 bg-slate-50 font-medium">
+                </div>
+                <div class="md:col-span-2">
+                  <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">Waktu Pelaksanaan Tindak Lanjut</label>
+                  <input type="text" id="rtl-waktu" required placeholder="Contoh: 2 minggu (akhir April 2026)" class="w-full border border-slate-300 rounded-xl p-3 bg-slate-50 font-medium">
+                </div>
+              </div>
+
+              <div class="flex justify-end pt-4 border-t border-slate-100">
+                <button type="submit" class="bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold px-8 py-3.5 rounded-xl shadow-lg shadow-emerald-700/20 text-xs md:text-sm transition flex items-center gap-2">
+                  <i class="fa-solid fa-floppy-disk"></i> Simpan Hasil Supervisi Pembelajaran Mendalam
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- 4. SECTION: DAFTAR HASIL SUPERVISI         -->
+      <!-- ========================================== -->
+      <section id="sec-daftarsupervisi" class="hidden space-y-6">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-5 gap-3">
+            <div>
+              <h3 class="font-extrabold text-slate-900 text-lg">Daftar Hasil Supervisi Pembelajaran Mendalam</h3>
+              <p class="text-xs text-slate-500">Semua rekaman instrumen telaah dan observasi guru pada periode aktif.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span id="list-period-badge" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 font-bold text-xs rounded-xl border border-emerald-200"></span>
+              <button onclick="switchTab('supervisi')" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-sm">
+                <i class="fa-solid fa-plus mr-1"></i> Tambah Supervisi
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-slate-50 text-slate-600 border-y border-slate-200 uppercase">
+                  <th class="py-3 px-3 w-12 text-center">No</th>
+                  <th class="py-3 px-3">Nama Pendidik & Mapel</th>
+                  <th class="py-3 px-3 text-center">Skor Telaah</th>
+                  <th class="py-3 px-3 text-center">Skor Observasi</th>
+                  <th class="py-3 px-3 text-center">Skor Akhir & Predikat</th>
+                  <th class="py-3 px-3">Topik & Temuan Utama</th>
+                  <th class="py-3 px-3 text-center">Aksi Laporan & Hapus</th>
+                </tr>
+              </thead>
+              <tbody id="full-supervision-table-body" class="divide-y divide-slate-200"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- 5. SECTION: LAPORAN & CETAK RTL            -->
+      <!-- ========================================== -->
+      <section id="sec-laporan" class="hidden space-y-4">
+        <!-- Control Bar (Word Toolbar Style) -->
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200/90 flex flex-wrap justify-between items-center gap-4 no-print">
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+              <i class="fa-solid fa-file-invoice text-emerald-700"></i> Format Dokumen:
+            </span>
+            <select id="jenis-laporan" onchange="renderReportView()" class="border border-slate-300 rounded-xl px-3.5 py-2 text-xs font-bold bg-slate-50 text-slate-800 cursor-pointer shadow-sm focus:ring-2 focus:ring-emerald-500">
+              <option value="rekap">Laporan Evaluasi, Refleksi & RTL Sekolah (Lampiran 3)</option>
+              <option value="individu">Instrumen Telaah & Observasi Individu Guru (Lampiran 5 & 6)</option>
+            </select>
+            <select id="filter-guru-laporan" onchange="renderReportView()" class="hidden border border-slate-300 rounded-xl px-3.5 py-2 text-xs font-bold bg-slate-50 text-slate-800 cursor-pointer shadow-sm focus:ring-2 focus:ring-emerald-500"></select>
+          </div>
+
+          <div class="flex items-center gap-2.5">
+            <div class="hidden md:flex items-center text-xs text-slate-500 mr-2 font-medium">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block mr-1.5"></span> Ukuran: A4 Portrait
+            </div>
+            <button onclick="exportToWord()" class="bg-blue-700 hover:bg-blue-800 text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow-md transition flex items-center gap-2">
+              <i class="fa-solid fa-file-word text-sm"></i> Unduh File Word (.doc)
+            </button>
+            <button onclick="window.print()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow-md transition flex items-center gap-2">
+              <i class="fa-solid fa-print text-sm"></i> Cetak / Simpan PDF
+            </button>
+          </div>
+        </div>
+
+        <!-- A4 WORD CONTAINER PREVIEW STAGE -->
+        <div id="report-container" class="word-preview-stage rounded-2xl shadow-inner">
+          <!-- Halaman A4 disuntikkan secara dinamis di sini -->
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- 6. SECTION: SUPER ADMIN MASTER PANEL       -->
+      <!-- ========================================== -->
+      <section id="sec-superadmin" class="hidden space-y-6">
+        <div class="bg-gradient-to-r from-amber-600 via-emerald-800 to-slate-900 p-6 md:p-8 rounded-3xl text-white shadow-xl flex flex-col md:flex-row justify-between items-center gap-6">
+          <div class="space-y-2">
+            <span class="px-3 py-1 bg-amber-400/30 text-amber-200 rounded-full text-xs font-extrabold uppercase tracking-wider">
+              <i class="fa-solid fa-crown mr-1.5 text-amber-300"></i> Panel Kontrol Master MKKS
+            </span>
+            <h3 class="text-2xl md:text-3xl font-black">Manajemen Seluruh Satuan Pendidikan</h3>
+            <p class="text-xs md:text-sm text-amber-100 max-w-2xl leading-relaxed">
+              Sebagai Super Admin, Anda dapat memantau rekapitulasi seluruh sekolah anggota MKKS SMA Kabupaten Sumenep, menambah sekolah baru, serta mengelola kredensial akses dengan mudah.
+            </p>
+          </div>
+          <button onclick="openAddSchoolModal()" class="bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold px-6 py-3.5 rounded-2xl text-xs md:text-sm shadow-lg transition flex items-center gap-2 flex-shrink-0">
+            <i class="fa-solid fa-plus-circle text-base"></i> Tambah Sekolah Baru
+          </button>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+          <div class="flex justify-between items-center mb-5">
+            <div>
+              <h3 class="font-extrabold text-slate-900 text-base">Daftar Seluruh Satuan Pendidikan MKKS</h3>
+              <p class="text-xs text-slate-500">Kelola dan beralih ke database sekolah anggota dengan satu klik.</p>
+            </div>
+            <span class="px-3 py-1 bg-emerald-50 text-emerald-800 font-bold text-xs rounded-xl border border-emerald-200">
+              <span id="superadmin-school-count">0</span> Sekolah Terdaftar
+            </span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-slate-50 text-slate-600 border-y border-slate-200 uppercase">
+                  <th class="py-3 px-3 w-12 text-center">No</th>
+                  <th class="py-3 px-3">Nama Satuan Pendidikan</th>
+                  <th class="py-3 px-3">Username Login</th>
+                  <th class="py-3 px-3 text-center">Jumlah Guru</th>
+                  <th class="py-3 px-3 text-center">Jumlah Supervisi</th>
+                  <th class="py-3 px-3 text-center">Aksi Manajemen</th>
+                </tr>
+              </thead>
+              <tbody id="superadmin-schools-body" class="divide-y divide-slate-200"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ADD SCHOOL MODAL FOR SUPER ADMIN -->
+  <div id="add-school-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-3xl shadow-xl border border-slate-200 max-w-md w-full p-6 transform transition-all">
+      <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-100">
+        <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+          <i class="fa-solid fa-school text-emerald-700"></i> Tambah Satuan Pendidikan Baru
+        </h3>
+        <button onclick="closeAddSchoolModal()" class="text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <form onsubmit="handleAddNewSchool(event)" class="space-y-4 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">Nama Satuan Pendidikan</label>
+          <input type="text" id="modal-new-school-name" required placeholder="Contoh: SMA NEGERI 4 SUMENEP" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 bg-slate-50 font-semibold text-slate-800">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">Username Akses (Kode Login)</label>
+          <input type="text" id="modal-new-school-username" required placeholder="Contoh: sman4sumenep" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 bg-slate-50 font-semibold text-slate-800">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1 uppercase tracking-wider">Password (Sama dengan Username)</label>
+          <input type="text" id="modal-new-school-password" readonly class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 bg-slate-100 text-slate-500 font-semibold" value="Otomatis sama dengan Username">
+        </div>
+        <div class="flex justify-end space-x-3 pt-2">
+          <button type="button" onclick="closeAddSchoolModal()" class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 font-semibold transition">
+            Batal
+          </button>
+          <button type="submit" class="px-5 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold transition shadow-sm">
+            Simpan Sekolah Baru
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // ====================================================
+    // KONFIGURASI WEB APP GOOGLE APPS SCRIPT & DEFAULT DATA
+    // ====================================================
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwCVmu91G3hjHlsguF-qf9l8Oi92Ag6K7JlFw_uR7Pi1A0MNjcXMTTNr-S58zVQG-Em/exec";
+    const DEFAULT_LOGO = "https://iili.io/nO0pE3F.jpg";
+
+    const SCHOOL_CREDENTIALS = {
+      "smanbo123": { name: "SMA NEGERI 1 AMBUNTEN", pass: "smanbo123" },
+      "smanar342": { name: "SMA NEGERI 1 ARJASA", pass: "smanar342" },
+      "bluto543": { name: "SMA NEGERI 1 BLUTO", pass: "bluto543" },
+      "smaga743": { name: "SMA NEGERI 1 GAPURA", pass: "smaga743" },
+      "gayam632": { name: "SMA NEGERI 1 GAYAM", pass: "gayam632" },
+      "kalianget462": { name: "SMA NEGERI 1 KALIANGET", pass: "kalianget462" },
+      "smatulen123": { name: "SMA NEGERI 1 LENTENG", pass: "smatulen123" },
+      "masalembu273": { name: "SMA NEGERI 1 MASALEMBU", pass: "masalembu273" },
+      "sapeken251": { name: "SMA NEGERI 1 SAPEKEN", pass: "sapeken251" },
+      "smansa292": { name: "SMA NEGERI 1 SUMENEP", pass: "smansa292" },
+      "smada848": { name: "SMA NEGERI 2 SUMENEP", pass: "smada848" },
+      "smaga383": { name: "SMA NEGERI 3 SUMENEP", pass: "smaga383" }
+    };
+
+    const INSTRUMEN_TELAAH = [
+      { no: 1, teks: "Keselarasan Profil Lulusan: Apakah tujuan, langkah kegiatan, dan asesmen sudah mengarah pada Profil Pelajar/Lulusan?" },
+      { no: 2, teks: "Keterpaduan Rencana: Apakah tujuan, langkah kegiatan, dan bentuk asesmen sudah saling selaras/berkesinambungan?" },
+      { no: 3, teks: "Praktik Pedagogis: Apakah strategi pembelajaran yang aktif, nyata, dan melatih berpikir tingkat tinggi sudah tampak pada modul/RPP?" },
+      { no: 4, teks: "Lingkungan Belajar: Apakah rencana penciptaan ruang belajar yang aman, nyaman, dan kolaboratif sudah terlihat?" },
+      { no: 5, teks: "Kemitraan Belajar: Apakah pelibatan kolaborasi timbal balik (antar-murid, guru, maupun orang tua/mitra) sudah tercantum?" },
+      { no: 6, teks: "Pemanfaatan Digital: Apakah rencana integrasi teknologi/media digital untuk mendukung pembelajaran sudah tertulis?" },
+      { no: 7, teks: "Pengalaman Memahami: Apakah langkah pembelajaran memfasilitasi murid mengonstruksi pemahaman konsep secara mendalam dan kontekstual?" },
+      { no: 8, teks: "Pengalaman Mengaplikasi: Apakah langkah pembelajaran memfasilitasi murid mempraktikkan konsep ke dalam masalah atau situasi nyata?" },
+      { no: 9, teks: "Pengalaman Merefleksi: Apakah langkah pembelajaran melatih murid mengevaluasi cara belajar, hasil belajar, dan emosinya secara mandiri?" },
+      { no: 10, teks: "Budaya Memuliakan: Apakah perencanaan memuat interaksi yang saling menghargai, inklusif, dan ramah terhadap semua murid?" },
+      { no: 11, teks: "Prinsip Pembelajaran: Apakah kegiatan belajar dirancang berkesadaran, bermakna, dan menggembirakan?" },
+      { no: 12, teks: "Diferensiasi Murid: Apakah perencanaan sudah disesuaikan dengan kebutuhan, minat, dan karakteristik murid?" },
+      { no: 13, teks: "Asesmen Awal (Diagnostik): Apakah ada rencana asesmen awal untuk memetakan kesiapan, emosi, dan kebutuhan belajar murid?" },
+      { no: 14, teks: "Asesmen Formatif (Proses): Apakah ada rencana penilaian proses dan umpan balik timbal balik secara berkala?" },
+      { no: 15, teks: "Asesmen Sumatif (Hasil): Apakah ada instrumen penilaian akhir (seperti tes, proyek, unjuk kerja, portofolio) untuk mengukur ketercapaian tujuan?" }
+    ];
+
+    const INSTRUMEN_OBSERVASI = [
+      { no: 1, teks: "Kesesuaian Pelaksanaan: Apakah tahapan mengajar (kegiatan awal, inti, dan penutup) di kelas berjalan sesuai rencana?" },
+      { no: 2, teks: "Kesesuaian Capaian: Apakah proses pembelajaran di kelas sungguh mengarah pada capaian Profil Lulusan sesuai kebutuhan nyata siswa?" },
+      { no: 3, teks: "Penerapan Pedagogis: Apakah guru benar-benar mengajak siswa belajar aktif, praktik langsung, dan berpikir tingkat tinggi (HOTS)?" },
+      { no: 4, teks: "Penciptaan Lingkungan Belajar: Apakah suasana kelas interaktif, aman secara psikologis, dan mendorong murid berani bereksplorasi?" },
+      { no: 5, teks: "Praktik Kemitraan: Apakah relasi di kelas bersifat setara dan kolaboratif, di mana siswa memiliki ruang bersuara dan memilih?" },
+      { no: 6, teks: "Implementasi Digital: Apakah sarana digital digunakan secara tepat untuk meningkatkan keaktifan belajar siswa, bukan sekadar mengganti papan tulis?" },
+      { no: 7, teks: "Perilaku Saling Memuliakan: Apakah guru dan murid saling menghargai, santun secara verbal/nonverbal, serta adil tanpa diskriminasi?" },
+      { no: 8, teks: "Keterlibatan 'Memahami': Apakah murid terlibat aktif menemukan dan membangun pemahamannya sendiri dari berbagai sumber?" },
+      { no: 9, teks: "Keterlibatan 'Mengaplikasi': Apakah murid diberi kesempatan memecahkan masalah nyata menggunakan materi yang dipelajari?" },
+      { no: 10, teks: "Keterlibatan 'Merefleksi': Apakah murid dibimbing merefleksikan proses belajar dan mengevaluasi hasil belajarnya sendiri?" },
+      { no: 11, teks: "Suasana Belajar: Apakah proses pembelajaran terasa bermakna, berkesadaran, dan menyenangkan bagi anak?" },
+      { no: 12, teks: "Akomodasi Keberagaman: Apakah guru memfasilitasi kebutuhan murid dengan tingkat kemampuan, gaya belajar, dan minat yang berbeda?" },
+      { no: 13, teks: "Pelaksanaan Asesmen Awal: Apakah guru mengecek kesiapan mental, minat, atau pengetahuan awal murid di awal pelajaran?" },
+      { no: 14, teks: "Pelaksanaan Asesmen Formatif: Apakah guru memantau jalannya aktivitas serta memberikan umpan balik perbaikan saat pembelajaran berlangsung?" },
+      { no: 15, teks: "Pelaksanaan Asesmen Sumatif: Apakah guru mengevaluasi ketercapaian kompetensi murid lewat unjuk kerja, kuis/tes, atau produk?" }
+    ];
+
+    let currentLoggedInUser = null;
+    let db = {
+      settings: {
+        sekolah: "SMA NEGERI 1 GAPURA",
+        kepalaSekolah: "Drs. H. Achmad Syaikhu, M.Pd.",
+        nipKs: "19680512 199412 1 003",
+        tahunPelajaran: "2026/2027",
+        semester: "Ganjil",
+        tanggalLaporan: "Sumenep, 24 Oktober 2026",
+        logoUrl: DEFAULT_LOGO
+      },
+      periods: [
+        { id: "p1", tapel: "2026/2027", sem: "Ganjil", tgl: "Sumenep, 24 Oktober 2026", active: true }
+      ],
+      teachers: [
+        { id: "t1", nama: "Ahmad Zaini, S.Pd., Gr.", nip: "19880115 201201 1 004", mapel: "Matematika", kelas: "X-A (Fase E)" },
+        { id: "t2", nama: "Siti Nurhaliza, M.Pd.", nip: "19920310 201502 2 003", mapel: "Bahasa Indonesia", kelas: "XI-F1 (Fase F)" },
+        { id: "t3", nama: "Bambang Suherman, S.Si.", nip: "19830721 200801 1 012", mapel: "Fisika", kelas: "XII-MIPA 1" }
+      ],
+      supervisions: [
+        {
+          id: "sup_1",
+          guruId: "t1",
+          periode: "2026/2027 - Ganjil",
+          tanggal: "2026-10-14",
+          topik: "Persamaan Linear Kontekstual & Integrasi Logika KKA",
+          skorTelaah: 85,
+          skorObservasi: 88,
+          skorAkhir: 86.5,
+          predikat: "Amat Baik",
+          temuan: "Keterlibatan murid aktif dan asesmen formatif berjalan dinamis.",
+          refleksi: "Aktivitas pemecahan masalah kontekstual menumbuhkan rasa ingin tahu siswa secara nyata.",
+          tindakLanjut: "Membagikan praktik baik pada forum MGMP sekolah.",
+          peranKs: "Memberikan apresiasi dan memfasilitasi diseminasi antar-guru.",
+          waktu: "1 Minggu",
+          detailTelaah: Array(15).fill({ skala: 3, komentar: "Sesuai indikator ketercapaian Profil Pelajar" }),
+          detailObservasi: Array(15).fill({ skala: 4, bukti: "Siswa berdiskusi aktif", catatan: "Sangat baik" }),
+          kualitatifTelaah: { kelebihan: "Rancangan asesmen autentik dan langkah terstruktur.", tingkatkan: "Perluas studi kasus lokal Sumenep.", rekomendasi: "Perkuat keterlibatan KKA." },
+          kualitatifObservasi: { kelebihan: "Suasana kelas interaktif dan aman.", tingkatkan: "Manajemen alokasi waktu penutup.", rekomendasi: "Konsisten pada umpan balik formatif." }
+        }
+      ]
+    };
+
+    // ====================================================
+    // AUTHENTICATION & SESSION MANAGEMENT
+    // ====================================================
+    function getStorageKey(user) {
+      return `SI_SUPER_M_DB_${user || 'DEFAULT'}`;
+    }
+
+    function updateLoginSchoolDropdown() {
+      const select = document.getElementById('login-username');
+      if (!select) return;
+      select.innerHTML = '<option value="" disabled selected>-- Pilih Sekolah / Akun --</option>';
+      select.innerHTML += '<option value="superadmin">⭐ SUPER ADMIN MKKS</option>';
+      
+      const storedExtra = localStorage.getItem("SI_SUPER_M_CUSTOM_SCHOOLS");
+      if (storedExtra) {
+        try {
+          const parsed = JSON.parse(storedExtra);
+          Object.assign(SCHOOL_CREDENTIALS, parsed);
+        } catch(e) {}
+      }
+
+      Object.keys(SCHOOL_CREDENTIALS).forEach(key => {
+        const sch = SCHOOL_CREDENTIALS[key];
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = sch.name;
+        select.appendChild(opt);
+      });
+    }
+
+    function togglePasswordVisibility() {
+      const p = document.getElementById('login-password');
+      const icon = document.getElementById('eye-icon');
+      if (!p) return;
+      if (p.type === 'password') {
+        p.type = 'text';
+        if (icon) icon.className = 'fa-solid fa-eye-slash';
+      } else {
+        p.type = 'password';
+        if (icon) icon.className = 'fa-solid fa-eye';
+      }
+    }
+
+    function handleLogin(e) {
+      if (e) e.preventDefault();
+      const userEl = document.getElementById('login-username');
+      const passEl = document.getElementById('login-password');
+      const errEl = document.getElementById('login-error');
+
+      const user = userEl ? userEl.value : '';
+      const pass = passEl ? passEl.value : '';
+
+      if (!user) {
+        if (errEl) {
+          errEl.innerText = "Silakan pilih satuan pendidikan terlebih dahulu.";
+          errEl.classList.remove('hidden');
+        }
+        return;
+      }
+
+      let isValid = false;
+      let schoolName = "";
+
+      if (user === 'superadmin' && (pass === 'superadmin' || pass === 'adminmkks')) {
+        isValid = true;
+        schoolName = "SUPER ADMIN MKKS";
+      } else if (SCHOOL_CREDENTIALS[user] && SCHOOL_CREDENTIALS[user].pass === pass) {
+        isValid = true;
+        schoolName = SCHOOL_CREDENTIALS[user].name;
+      }
+
+      if (isValid) {
+        currentLoggedInUser = user;
+        localStorage.setItem("SI_SUPER_M_ACTIVE_USER", user);
+        if (errEl) errEl.classList.add('hidden');
+
+        document.getElementById('login-overlay').classList.add('hidden');
+        document.getElementById('app-main-layout').classList.remove('hidden');
+        document.getElementById('sidebar-active-school').innerText = schoolName;
+
+        const navSuperadmin = document.getElementById('nav-superadmin');
+        if (user === 'superadmin') {
+          if (navSuperadmin) navSuperadmin.classList.remove('hidden');
+        } else {
+          if (navSuperadmin) navSuperadmin.classList.add('hidden');
+        }
+
+        loadDatabase();
+        showToast(`Selamat datang di SI-SUPER M, ${schoolName}!`);
+      } else {
+        if (errEl) {
+          errEl.innerText = "Password tidak sesuai. Silakan periksa kembali password akun sekolah Anda.";
+          errEl.classList.remove('hidden');
+        }
+      }
+    }
+
+    function handleLogout() {
+      openConfirmModal("Konfirmasi Keluar", "Apakah Anda yakin ingin keluar dari akun ini?", () => {
+        localStorage.removeItem("SI_SUPER_M_ACTIVE_USER");
+        currentLoggedInUser = null;
+        document.getElementById('app-main-layout').classList.add('hidden');
+        document.getElementById('login-overlay').classList.remove('hidden');
+        const pass = document.getElementById('login-password');
+        if (pass) pass.value = '';
+        showToast("Anda telah keluar dari sistem.");
+      });
+    }
+
+    // ====================================================
+    // LOGO MANAGEMENT
+    // ====================================================
+    function getSchoolLogo() {
+      return (db.settings && db.settings.logoUrl) ? db.settings.logoUrl : DEFAULT_LOGO;
+    }
+
+    function handleLogoUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      if (file.size > 1.5 * 1024 * 1024) {
+        showToast("Ukuran logo terlalu besar (maksimal 1.5 MB)", "warning");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        db.settings.logoUrl = evt.target.result;
+        applySchoolLogoUI();
+        saveDatabase(true);
+        showToast("Logo sekolah berhasil diperbarui!");
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function resetDefaultLogo() {
+      db.settings.logoUrl = DEFAULT_LOGO;
+      applySchoolLogoUI();
+      saveDatabase(true);
+      showToast("Logo dikembalikan ke Logo Default MKKS");
+    }
+
+    function applySchoolLogoUI() {
+      const logoUrl = getSchoolLogo();
+      const preview = document.getElementById('logo-preview');
+      const headerLogo = document.getElementById('header-school-logo');
+      if (preview) preview.src = logoUrl;
+      if (headerLogo) headerLogo.src = logoUrl;
+    }
+
+    // ====================================================
+    // DATABASE STORAGE & CLOUD SYNC
+    // ====================================================
+    function normalizePeriods() {
+      if (!Array.isArray(db.periods) || db.periods.length === 0) {
+        db.periods = [{
+          id: "p_" + Date.now(),
+          tapel: "2026/2027",
+          sem: "Ganjil",
+          tgl: db.settings.tanggalLaporan || "Sumenep, 24 Oktober 2026",
+          active: true
+        }];
+        return;
+      }
+
+      // Bersihkan dan normalisasi setiap item periode (tangani format lama / variasi nama properti)
+      let cleanedPeriods = db.periods
+        .map((p, idx) => {
+          const tapel = (p.tapel || p.tahunPelajaran || "2026/2027").toString().trim();
+          const sem = (p.sem || p.semester || "Ganjil").toString().trim();
+          const tgl = (p.tgl || p.tanggal || p.tanggalLaporan || "Sumenep, 24 Oktober 2026").toString().trim();
+          return {
+            id: p.id || `p_${Date.now()}_${idx}`,
+            tapel: tapel,
+            sem: sem,
+            tgl: tgl,
+            active: Boolean(p.active)
+          };
+        })
+        // Sembunyikan/filter periode 2025/2026 - Genap sesuai instruksi
+        .filter(p => !(p.tapel.includes("2025/2026") && p.sem.toLowerCase().includes("genap")));
+
+      // Jika setelah difilter kosong atau tidak memiliki 2026/2027 - Ganjil, pastikan default 2026/2027 - Ganjil tersedia
+      const hasDefault = cleanedPeriods.some(p => p.tapel === "2026/2027" && p.sem === "Ganjil");
+      if (!hasDefault) {
+        cleanedPeriods.unshift({
+          id: "p_default_2026_ganjil",
+          tapel: "2026/2027",
+          sem: "Ganjil",
+          tgl: "Sumenep, 24 Oktober 2026",
+          active: true
+        });
+      }
+
+      // Filter duplikat berdasarkan kombinasi Tapel + Semester
+      const uniqueMap = new Map();
+      const uniqueList = [];
+      cleanedPeriods.forEach(p => {
+        const key = `${p.tapel.toLowerCase()} - ${p.sem.toLowerCase()}`;
+        if (!uniqueMap.has(key)) {
+          uniqueMap.set(key, true);
+          uniqueList.push(p);
+        }
+      });
+      db.periods = uniqueList;
+
+      // Pastikan HANYA SATU periode yang aktif. Prioritaskan 2026/2027 - Ganjil jika settings belum diset
+      let targetTapel = (db.settings.tahunPelajaran || "2026/2027").toLowerCase();
+      let targetSem = (db.settings.semester || "Ganjil").toLowerCase();
+
+      // Jika settings sebelumnya merujuk ke 2025/2026 Genap yang disembunyikan, arahkan ke 2026/2027 Ganjil
+      if (targetTapel.includes("2025/2026") && targetSem.includes("genap")) {
+        targetTapel = "2026/2027";
+        targetSem = "ganjil";
+      }
+
+      let activeFound = false;
+      db.periods.forEach(p => {
+        if (!activeFound && p.tapel.toLowerCase() === targetTapel && p.sem.toLowerCase() === targetSem) {
+          p.active = true;
+          activeFound = true;
+        } else {
+          p.active = false;
+        }
+      });
+
+      // Jika belum ditemukan, jadikan 2026/2027 - Ganjil sebagai aktif
+      if (!activeFound) {
+        let ganjilIdx = db.periods.findIndex(p => p.tapel === "2026/2027" && p.sem.toLowerCase() === "ganjil");
+        if (ganjilIdx < 0) ganjilIdx = 0;
+        db.periods.forEach((p, idx) => {
+          p.active = (idx === ganjilIdx);
+        });
+      }
+
+      // Sinkronkan kembali settings ke periode aktif
+      const currentActive = db.periods.find(p => p.active) || db.periods[0];
+      if (currentActive) {
+        db.settings.tahunPelajaran = currentActive.tapel;
+        db.settings.semester = currentActive.sem;
+        if (currentActive.tgl) db.settings.tanggalLaporan = currentActive.tgl;
+      }
+    }
+
+    function getActivePeriodKey() {
+      normalizePeriods();
+      const act = db.periods.find(p => p.active) || db.periods[0];
+      return `${act.tapel} - ${act.sem}`;
+    }
+
+    function loadDatabase() {
+      const key = getStorageKey(currentLoggedInUser);
+      const saved = localStorage.getItem(key);
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed && typeof parsed === 'object') {
+            db = Object.assign(db, parsed);
+          }
+        } catch (e) {
+          console.error("Gagal parse local db:", e);
+        }
+      } else {
+        if (SCHOOL_CREDENTIALS[currentLoggedInUser]) {
+          db.settings.sekolah = SCHOOL_CREDENTIALS[currentLoggedInUser].name;
+        }
+      }
+
+      normalizePeriods();
+      applySchoolLogoUI();
+      renderAll();
+      syncFromCloud();
+    }
+
+    function saveDatabase(syncToCloud = true) {
+      normalizePeriods();
+      const key = getStorageKey(currentLoggedInUser);
+      localStorage.setItem(key, JSON.stringify(db));
+      renderAll();
+
+      if (syncToCloud && SCRIPT_URL) {
+        const badge = document.getElementById('db-status-badge');
+        if (badge) {
+          badge.innerText = "Menyimpan...";
+          badge.className = "px-2 py-0.5 bg-amber-600 text-white rounded text-[10px]";
+        }
+
+        const payload = {
+          schoolKey: currentLoggedInUser || "DEFAULT",
+          settings: db.settings,
+          periods: db.periods,
+          teachers: db.teachers,
+          supervisions: db.supervisions
+        };
+
+        fetch(SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        }).then(() => {
+          if (badge) {
+            badge.innerText = "Tersimpan di Cloud";
+            badge.className = "px-2 py-0.5 bg-emerald-800 text-emerald-300 rounded text-[10px]";
+          }
+        }).catch(err => {
+          console.warn("Gagal simpan ke cloud:", err);
+          if (badge) {
+            badge.innerText = "Lokal Saja";
+            badge.className = "px-2 py-0.5 bg-slate-700 text-slate-300 rounded text-[10px]";
+          }
+        });
+      }
+    }
+
+    function syncFromCloud() {
+      if (!SCRIPT_URL) return;
+      const schoolKey = currentLoggedInUser || "DEFAULT";
+      const badge = document.getElementById('db-status-badge');
+      if (badge) {
+        badge.innerText = "Sinkronisasi...";
+        badge.className = "px-2 py-0.5 bg-amber-600 text-white rounded text-[10px]";
+      }
+
+      fetch(`${SCRIPT_URL}?schoolKey=${encodeURIComponent(schoolKey)}`)
+        .then(res => res.json())
+        .then(json => {
+          if (json && json.status === "success" && json.data) {
+            let hasChanges = false;
+            if (json.data.settings && Object.keys(json.data.settings).length > 0) {
+              db.settings = Object.assign(db.settings, json.data.settings);
+              hasChanges = true;
+            }
+            if (json.data.periods && Array.isArray(json.data.periods) && json.data.periods.length > 0) {
+              db.periods = json.data.periods;
+              hasChanges = true;
+            }
+            if (json.data.teachers && Array.isArray(json.data.teachers) && json.data.teachers.length > 0) {
+              db.teachers = json.data.teachers;
+              hasChanges = true;
+            }
+            if (json.data.supervisions && Array.isArray(json.data.supervisions) && json.data.supervisions.length > 0) {
+              db.supervisions = json.data.supervisions;
+              hasChanges = true;
+            }
+
+            if (hasChanges) {
+              normalizePeriods();
+              localStorage.setItem(getStorageKey(currentLoggedInUser), JSON.stringify(db));
+              renderAll();
+              applySchoolLogoUI();
+            }
+
+            if (badge) {
+              badge.innerText = "Sinkron";
+              badge.className = "px-2 py-0.5 bg-emerald-800 text-emerald-300 rounded text-[10px]";
+            }
+          }
+        })
+        .catch(err => {
+          console.warn("Sinkronisasi otomatis cloud belum dapat dijangkau:", err);
+          if (badge) {
+            badge.innerText = "Lokal Aktif";
+            badge.className = "px-2 py-0.5 bg-emerald-800 text-emerald-300 rounded text-[10px]";
+          }
+        });
+    }
+
+    function manualSyncFromCloud() {
+      showToast("Sedang menarik data terbaru dari Google Sheets...");
+      syncFromCloud();
+    }
+
+    function confirmResetDatabase() {
+      openConfirmModal("Muat Ulang Data Contoh", "Apakah Anda yakin ingin memuat ulang database dengan data contoh standar MKKS? Data tersimpan lokal akan diperbarui.", () => {
+        localStorage.removeItem(getStorageKey(currentLoggedInUser));
+        location.reload();
+      });
+    }
+
+    // ====================================================
+    // TAB NAVIGATION & INTERFACE
+    // ====================================================
+    function switchTab(tabId) {
+      const tabs = ['dashboard', 'guru', 'supervisi', 'daftarsupervisi', 'laporan', 'superadmin'];
+      tabs.forEach(t => {
+        const sec = document.getElementById(`sec-${t}`);
+        const nav = document.getElementById(`nav-${t}`);
+        if (sec) sec.classList.add('hidden');
+        if (nav) {
+          nav.classList.remove('bg-emerald-800', 'text-white', 'shadow-sm');
+          nav.classList.add('text-emerald-100');
+        }
+      });
+
+      const activeSec = document.getElementById(`sec-${tabId}`);
+      const activeNav = document.getElementById(`nav-${tabId}`);
+      if (activeSec) activeSec.classList.remove('hidden');
+      if (activeNav) {
+        activeNav.classList.add('bg-emerald-800', 'text-white', 'shadow-sm');
+        activeNav.classList.remove('text-emerald-100');
+      }
+
+      const titles = {
+        dashboard: "Dashboard Supervisi Pembelajaran Mendalam",
+        guru: "Pengaturan Satuan Pendidikan & Data Guru",
+        supervisi: "Formulir Instrumen Supervisi Akademik",
+        daftarsupervisi: "Rekapitulasi Daftar Hasil Supervisi Guru",
+        laporan: "Laporan Evaluasi, Refleksi & RTL Sekolah (Format A4)",
+        superadmin: "Panel Master Kontrol Super Admin MKKS"
+      };
+      const titleEl = document.getElementById('page-title');
+      if (titleEl && titles[tabId]) titleEl.innerText = titles[tabId];
+
+      if (tabId === 'laporan') renderReportView();
+      if (tabId === 'superadmin') renderSuperadminTable();
+    }
+
+    function switchSubTab(sub) {
+      ['telaah', 'observasi', 'rtl'].forEach(s => {
+        const el = document.getElementById(`subsec-${s}`);
+        const btn = document.getElementById(`subtab-${s}`);
+        if (el) el.classList.add('hidden');
+        if (btn) {
+          btn.classList.remove('border-b-2', 'border-emerald-600', 'text-emerald-800', 'bg-white');
+          btn.classList.add('text-slate-600');
+        }
+      });
+
+      const targetEl = document.getElementById(`subsec-${sub}`);
+      const targetBtn = document.getElementById(`subtab-${sub}`);
+      if (targetEl) targetEl.classList.remove('hidden');
+      if (targetBtn) {
+        targetBtn.classList.add('border-b-2', 'border-emerald-600', 'text-emerald-800', 'bg-white');
+        targetBtn.classList.remove('text-slate-600');
+      }
+    }
+
+    // ====================================================
+    // BUILD INSTRUMENTS TABLES
+    // ====================================================
+    function buildInstrumentTables() {
+      const tbodyTelaah = document.getElementById('tbody-telaah');
+      if (tbodyTelaah) {
+        tbodyTelaah.innerHTML = INSTRUMEN_TELAAH.map(item => `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="py-2.5 px-3 text-center font-bold text-slate-500">${item.no}</td>
+            <td class="py-2.5 px-3 font-medium text-slate-800">${item.teks}</td>
+            <td class="py-2.5 px-3 text-center">
+              <select id="skala-telaah-${item.no}" onchange="updateLiveScorePreview()" class="w-full border border-slate-300 rounded-lg p-2 font-bold bg-white text-emerald-800 cursor-pointer">
+                <option value="4">4 - Sangat Baik</option>
+                <option value="3" selected>3 - Baik</option>
+                <option value="2">2 - Kurang</option>
+                <option value="1">1 - Sangat Kurang</option>
+                <option value="0">0 - Tidak Ada</option>
+              </select>
+            </td>
+            <td class="py-2.5 px-3">
+              <input type="text" id="komentar-telaah-${item.no}" placeholder="Catatan telaah..." class="w-full border border-slate-200 rounded-lg p-2 bg-slate-50 text-xs">
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      const tbodyObs = document.getElementById('tbody-observasi');
+      if (tbodyObs) {
+        tbodyObs.innerHTML = INSTRUMEN_OBSERVASI.map(item => `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="py-2.5 px-3 text-center font-bold text-slate-500">${item.no}</td>
+            <td class="py-2.5 px-3 font-medium text-slate-800">${item.teks}</td>
+            <td class="py-2.5 px-3 text-center">
+              <select id="skala-obs-${item.no}" onchange="updateLiveScorePreview()" class="w-full border border-slate-300 rounded-lg p-2 font-bold bg-white text-blue-800 cursor-pointer">
+                <option value="4">4 - Sangat Baik</option>
+                <option value="3" selected>3 - Baik</option>
+                <option value="2">2 - Kurang</option>
+                <option value="1">1 - Sangat Kurang</option>
+                <option value="0">0 - Tidak Ada</option>
+              </select>
+            </td>
+            <td class="py-2.5 px-3">
+              <input type="text" id="bukti-obs-${item.no}" placeholder="Bukti teramati..." class="w-full border border-slate-200 rounded-lg p-2 bg-slate-50 text-xs">
+            </td>
+            <td class="py-2.5 px-3">
+              <input type="text" id="catatan-obs-${item.no}" placeholder="Catatan observer..." class="w-full border border-slate-200 rounded-lg p-2 bg-slate-50 text-xs">
+            </td>
+          </tr>
+        `).join('');
+      }
+    }
+
+    function fillDefaultScores(type, value) {
+      const items = type === 'telaah' ? INSTRUMEN_TELAAH : INSTRUMEN_OBSERVASI;
+      const prefix = type === 'telaah' ? 'skala-telaah-' : 'skala-obs-';
+      items.forEach(it => {
+        const el = document.getElementById(`${prefix}${it.no}`);
+        if (el) el.value = String(value);
+      });
+      updateLiveScorePreview();
+      showToast(`Semua skala ${type} diubah ke ${value}`);
+    }
+
+    function updateLiveScorePreview() {
+      let sumTelaah = 0;
+      INSTRUMEN_TELAAH.forEach(it => {
+        const el = document.getElementById(`skala-telaah-${it.no}`);
+        if (el) sumTelaah += parseFloat(el.value || 0);
+      });
+      const skorTelaah = (sumTelaah / (INSTRUMEN_TELAAH.length * 4)) * 100;
+
+      let sumObs = 0;
+      INSTRUMEN_OBSERVASI.forEach(it => {
+        const el = document.getElementById(`skala-obs-${it.no}`);
+        if (el) sumObs += parseFloat(el.value || 0);
+      });
+      const skorObs = (sumObs / (INSTRUMEN_OBSERVASI.length * 4)) * 100;
+
+      const skorAkhir = ((skorTelaah + skorObs) / 2).toFixed(1);
+      const previewEl = document.getElementById('live-score-preview');
+      if (previewEl) previewEl.innerText = `${skorAkhir} (${getPredikat(skorAkhir)})`;
+    }
+
+    function getPredikat(skor) {
+      const s = parseFloat(skor);
+      if (s >= 91) return "Amat Baik";
+      if (s >= 76) return "Baik";
+      if (s >= 61) return "Cukup";
+      return "Kurang";
+    }
+
+    function fillPresetRTL(type) {
+      const presets = {
+        keterlibatan: {
+          temuan: "Keterlibatan murid dalam diskusi kelompok dan tanya jawab masih rendah",
+          refleksi: "Aktivitas pembelajaran dominan ceramah, pertanyaan guru bersifat tertutup (LOTS)",
+          tindaklanjut: "Menerapkan pembelajaran berbasis masalah (PBL) dan scaffolding pertanyaan pemantik berjenjang",
+          peranks: "Coaching klinis teknik questioning & diferensiasi proses",
+          waktu: "2 Minggu"
+        },
+        kontekstual: {
+          temuan: "Materi pembelajaran belum dikaitkan dengan konteks nyata lingkungan hidup murid di Sumenep",
+          refleksi: "Pendidik terlalu terpaku pada buku teks tanpa mengintegrasikan potensi kearifan lokal",
+          tindaklanjut: "Menyusun LKPD berbasis eksplorasi lingkungan dan studi kasus riil kemaritiman/budaya Sumenep",
+          peranks: "Pendampingan penyusunan perangkat modul kontekstual",
+          waktu: "3 Minggu"
+        },
+        hots: {
+          temuan: "Asesmen formatif dan sumatif masih berada pada level kognitif mengingat (C1-C2)",
+          refleksi: "Kurangnya pemahaman guru dalam merumuskan stimulus soal berbobot HOTS dan rubrik autentik",
+          tindaklanjut: "Menyusun instrumen asesmen performa proyek dengan rubrik penilaian bergradasi",
+          peranks: "Workshop internal penyusunan instrumen HOTS",
+          waktu: "2 Minggu"
+        },
+        kka: {
+          temuan: "Belum terintegrasinya literasi Koding dan Kecerdasan Artifisial (KKA) dalam kegiatan belajar",
+          refleksi: "Pendidik belum mengeksplorasi penggunaan tools AI generatif edukatif dan computational thinking",
+          tindaklanjut: "Mengintegrasikan prompt engineering terarah dan simulasi komputasi sederhana dalam materi",
+          peranks: "Fasilitasi mentoring digital bersama rekan guru penggerak/TIK",
+          waktu: "1 Bulan"
+        }
+      };
+
+      const p = presets[type];
+      if (p) {
+        document.getElementById('rtl-temuan').value = p.temuan;
+        document.getElementById('rtl-refleksi').value = p.refleksi;
+        document.getElementById('rtl-tindaklanjut').value = p.tindaklanjut;
+        document.getElementById('rtl-peranks').value = p.peranks;
+        document.getElementById('rtl-waktu').value = p.waktu;
+        showToast("Preset RTL berhasil diterapkan");
+      }
+    }
+
+    // ====================================================
+    // FORM HANDLERS & ENTITIES
+    // ====================================================
+    function saveSchoolSettings(e) {
+      if (e) e.preventDefault();
+      const sekolah = document.getElementById('set-sekolah').value.trim();
+      const ks = document.getElementById('set-ks').value.trim();
+      const nipKs = document.getElementById('set-nip-ks').value.trim();
+      const tapel = document.getElementById('set-tapel').value.trim();
+      const sem = document.getElementById('set-semester').value;
+      const tgl = document.getElementById('set-tanggal-laporan').value.trim();
+
+      db.settings.sekolah = sekolah;
+      db.settings.kepalaSekolah = ks;
+      db.settings.nipKs = nipKs;
+      db.settings.tahunPelajaran = tapel;
+      db.settings.semester = sem;
+      db.settings.tanggalLaporan = tgl;
+
+      if (!Array.isArray(db.periods)) db.periods = [];
+      
+      // Reset semua periode ke false
+      db.periods.forEach(p => p.active = false);
+
+      const matchIndex = db.periods.findIndex(p => 
+        (p.tapel || '').toLowerCase() === tapel.toLowerCase() && 
+        (p.sem || '').toLowerCase() === sem.toLowerCase()
+      );
+
+      if (matchIndex >= 0) {
+        db.periods[matchIndex].active = true;
+        if (tgl) db.periods[matchIndex].tgl = tgl;
+      } else {
+        db.periods.push({
+          id: "p_" + Date.now(),
+          tapel: tapel,
+          sem: sem,
+          tgl: tgl || `Sumenep, ${new Date().toLocaleDateString('id-ID')}`,
+          active: true
+        });
+      }
+
+      normalizePeriods();
+      saveDatabase(true);
+      showToast("Identitas sekolah & periode aktif berhasil disimpan!");
+    }
+
+    function addNewPeriod(e) {
+      if (e) e.preventDefault();
+      const tapel = document.getElementById('new-period-tapel').value.trim();
+      const sem = document.getElementById('new-period-sem').value;
+      const tgl = document.getElementById('new-period-tgl').value.trim() || `Sumenep, ${new Date().toLocaleDateString('id-ID')}`;
+
+      if (!tapel) {
+        showToast("Tahun Pelajaran wajib diisi!", "warning");
+        return;
+      }
+
+      if (!Array.isArray(db.periods)) db.periods = [];
+
+      // Nonaktifkan semua periode lain
+      db.periods.forEach(p => p.active = false);
+
+      // Cek apakah periode dengan tapel & semester yang sama sudah ada
+      const existing = db.periods.find(p => 
+        (p.tapel || '').toLowerCase() === tapel.toLowerCase() && 
+        (p.sem || '').toLowerCase() === sem.toLowerCase()
+      );
+
+      if (existing) {
+        existing.active = true;
+        existing.tgl = tgl;
+        showToast(`Periode ${tapel} - ${sem} sudah ada dan kini diaktifkan!`);
+      } else {
+        db.periods.push({
+          id: "p_" + Date.now(),
+          tapel: tapel,
+          sem: sem,
+          tgl: tgl,
+          active: true
+        });
+        showToast(`Periode ${tapel} - ${sem} berhasil ditambahkan dan diaktifkan!`);
+      }
+
+      db.settings.tahunPelajaran = tapel;
+      db.settings.semester = sem;
+      db.settings.tanggalLaporan = tgl;
+
+      normalizePeriods();
+      saveDatabase(true);
+      e.target.reset();
+    }
+
+    function switchActivePeriod(periodKey) {
+      if (!periodKey) return;
+      const parts = periodKey.split(' - ');
+      if (parts.length >= 2) {
+        const tapel = parts[0].trim();
+        const sem = parts[1].trim();
+
+        if (!Array.isArray(db.periods) || db.periods.length === 0) {
+          db.periods = [{
+            id: "p_" + Date.now(),
+            tapel: tapel,
+            sem: sem,
+            tgl: db.settings.tanggalLaporan || `Sumenep, ${new Date().toLocaleDateString('id-ID')}`,
+            active: true
+          }];
+        }
+
+        // Matikan semua periode, aktifkan hanya yang dipilih
+        let found = false;
+        db.periods.forEach(p => {
+          if ((p.tapel || '').trim().toLowerCase() === tapel.toLowerCase() && 
+              (p.sem || '').trim().toLowerCase() === sem.toLowerCase()) {
+            p.active = true;
+            found = true;
+            if (p.tgl) db.settings.tanggalLaporan = p.tgl;
+          } else {
+            p.active = false;
+          }
+        });
+
+        if (!found) {
+          db.periods.push({
+            id: "p_" + Date.now(),
+            tapel: tapel,
+            sem: sem,
+            tgl: db.settings.tanggalLaporan || `Sumenep, ${new Date().toLocaleDateString('id-ID')}`,
+            active: true
+          });
+        }
+
+        db.settings.tahunPelajaran = tapel;
+        db.settings.semester = sem;
+
+        normalizePeriods();
+        saveDatabase(true);
+        showToast(`Berhasil beralih ke periode: ${tapel} - ${sem}`);
+      }
+    }
+
+    function deletePeriod(id, event) {
+      if (event) event.stopPropagation();
+      normalizePeriods();
+      if (!Array.isArray(db.periods) || db.periods.length <= 1) {
+        showToast("Minimal harus ada 1 periode penilaian yang tersimpan.", "warning");
+        return;
+      }
+
+      const target = db.periods.find(p => p.id === id);
+      if (!target) return;
+
+      openConfirmModal(
+        "Hapus Periode Penilaian",
+        `Apakah Anda yakin ingin menghapus periode "${target.tapel} - ${target.sem}"?`,
+        () => {
+          const wasActive = target.active;
+          db.periods = db.periods.filter(p => p.id !== id);
+
+          if (wasActive && db.periods.length > 0) {
+            db.periods[0].active = true;
+            db.settings.tahunPelajaran = db.periods[0].tapel;
+            db.settings.semester = db.periods[0].sem;
+            if (db.periods[0].tgl) db.settings.tanggalLaporan = db.periods[0].tgl;
+          }
+
+          normalizePeriods();
+          saveDatabase(true);
+          showToast(`Periode ${target.tapel} - ${target.sem} berhasil dihapus.`);
+        }
+      );
+    }
+
+    function addTeacher(e) {
+      if (e) e.preventDefault();
+      const nama = document.getElementById('guru-nama').value.trim();
+      const nip = document.getElementById('guru-nip').value.trim() || "-";
+      const mapel = document.getElementById('guru-mapel').value.trim();
+      const kelas = document.getElementById('guru-kelas').value.trim();
+
+      if (!nama || !mapel) return;
+
+      db.teachers.push({
+        id: "t_" + Date.now(),
+        nama: nama,
+        nip: nip,
+        mapel: mapel,
+        kelas: kelas
+      });
+
+      saveDatabase(true);
+      showToast(`Pendidik ${nama} berhasil ditambahkan!`);
+      e.target.reset();
+    }
+
+    function deleteTeacher(id) {
+      const t = db.teachers.find(x => x.id === id);
+      const nama = t ? t.nama : "Pendidik";
+      openConfirmModal("Hapus Guru", `Apakah Anda yakin ingin menghapus data pendidik "${nama}"? Data hasil supervisi guru ini juga akan terhapus.`, () => {
+        db.teachers = db.teachers.filter(x => x.id !== id);
+        db.supervisions = db.supervisions.filter(x => x.guruId !== id);
+        saveDatabase(true);
+        showToast(`Data pendidik telah dihapus.`);
+      });
+    }
+
+    function saveSupervisi(e) {
+      if (e) e.preventDefault();
+      const guruId = document.getElementById('sup-guru-id').value;
+      const periode = document.getElementById('sup-periode').value;
+      const tanggal = document.getElementById('sup-tanggal').value;
+      const topik = document.getElementById('sup-topik').value;
+
+      if (!guruId) {
+        showToast("Pilih guru yang disupervisi", "warning");
+        return;
+      }
+
+      let sumTelaah = 0;
+      const detailTelaah = INSTRUMEN_TELAAH.map(item => {
+        const skala = parseFloat(document.getElementById(`skala-telaah-${item.no}`).value || 3);
+        const komentar = document.getElementById(`komentar-telaah-${item.no}`).value.trim() || "-";
+        sumTelaah += skala;
+        return { skala, komentar };
+      });
+      const skorTelaah = parseFloat(((sumTelaah / (INSTRUMEN_TELAAH.length * 4)) * 100).toFixed(1));
+
+      let sumObs = 0;
+      const detailObservasi = INSTRUMEN_OBSERVASI.map(item => {
+        const skala = parseFloat(document.getElementById(`skala-obs-${item.no}`).value || 3);
+        const bukti = document.getElementById(`bukti-obs-${item.no}`).value.trim() || "-";
+        const catatan = document.getElementById(`catatan-obs-${item.no}`).value.trim() || "-";
+        sumObs += skala;
+        return { skala, bukti, catatan };
+      });
+      const skorObservasi = parseFloat(((sumObs / (INSTRUMEN_OBSERVASI.length * 4)) * 100).toFixed(1));
+
+      const skorAkhir = parseFloat(((skorTelaah + skorObservasi) / 2).toFixed(1));
+      const predikat = getPredikat(skorAkhir);
+
+      const existingIndex = db.supervisions.findIndex(s => s.guruId === guruId && s.periode === periode);
+
+      const supData = {
+        id: existingIndex >= 0 ? db.supervisions[existingIndex].id : "sup_" + Date.now(),
+        guruId: guruId,
+        periode: periode,
+        tanggal: tanggal,
+        topik: topik,
+        skorTelaah: skorTelaah,
+        skorObservasi: skorObservasi,
+        skorAkhir: skorAkhir,
+        predikat: predikat,
+        temuan: document.getElementById('rtl-temuan').value,
+        refleksi: document.getElementById('rtl-refleksi').value,
+        tindakLanjut: document.getElementById('rtl-tindaklanjut').value,
+        peranKs: document.getElementById('rtl-peranks').value,
+        waktu: document.getElementById('rtl-waktu').value,
+        detailTelaah: detailTelaah,
+        detailObservasi: detailObservasi,
+        kualitatifTelaah: {
+          kelebihan: document.getElementById('telaah-kelebihan').value || "-",
+          tingkatkan: document.getElementById('telaah-tingkatkan').value || "-",
+          rekomendasi: document.getElementById('telaah-rekomendasi').value || "-"
+        },
+        kualitatifObservasi: {
+          kelebihan: document.getElementById('obs-kelebihan').value || "-",
+          tingkatkan: document.getElementById('obs-tingkatkan').value || "-",
+          rekomendasi: document.getElementById('obs-rekomendasi').value || "-"
+        }
+      };
+
+      if (existingIndex >= 0) {
+        db.supervisions[existingIndex] = supData;
+        showToast("Data supervisi berhasil diperbarui!");
+      } else {
+        db.supervisions.unshift(supData);
+        showToast("Data supervisi berhasil disimpan!");
+      }
+
+      saveDatabase(true);
+      switchTab('daftarsupervisi');
+    }
+
+    function deleteSupervisi(id) {
+      openConfirmModal("Hapus Supervisi", "Apakah Anda yakin ingin menghapus data hasil supervisi ini?", () => {
+        db.supervisions = db.supervisions.filter(s => s.id !== id);
+        saveDatabase(true);
+        showToast("Hasil supervisi berhasil dihapus.");
+      });
+    }
+
+    function viewSupervisiDetail(supId) {
+      switchTab('laporan');
+      const jenisEl = document.getElementById('jenis-laporan');
+      const filterEl = document.getElementById('filter-guru-laporan');
+      if (jenisEl) jenisEl.value = 'individu';
+      if (filterEl) filterEl.value = supId;
+      renderReportView();
+    }
+
+    // ====================================================
+    // SUPER ADMIN PANEL
+    // ====================================================
+    function renderSuperadminTable() {
+      const tbody = document.getElementById('superadmin-schools-body');
+      const countEl = document.getElementById('superadmin-school-count');
+      if (!tbody) return;
+
+      const keys = Object.keys(SCHOOL_CREDENTIALS);
+      if (countEl) countEl.innerText = keys.length;
+
+      tbody.innerHTML = keys.map((k, idx) => {
+        const sch = SCHOOL_CREDENTIALS[k];
+        const sKey = getStorageKey(k);
+        let teacherCount = 0;
+        let supCount = 0;
+        const stored = localStorage.getItem(sKey);
+        if (stored) {
+          try {
+            const p = JSON.parse(stored);
+            teacherCount = p.teachers ? p.teachers.length : 0;
+            supCount = p.supervisions ? p.supervisions.length : 0;
+          } catch(e) {}
+        }
+
+        return `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="py-3 px-3 text-center font-bold text-slate-500">${idx + 1}</td>
+            <td class="py-3 px-3 font-bold text-slate-800">${sch.name}</td>
+            <td class="py-3 px-3"><code class="px-2 py-1 bg-slate-100 rounded text-emerald-800 font-bold">${k}</code></td>
+            <td class="py-3 px-3 text-center"><span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 font-bold">${teacherCount} Guru</span></td>
+            <td class="py-3 px-3 text-center"><span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold">${supCount} Rekaman</span></td>
+            <td class="py-3 px-3 text-center">
+              <button onclick="switchSchoolAsSuperadmin('${k}')" class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition shadow-sm">
+                <i class="fa-solid fa-arrow-right-to-bracket mr-1"></i> Buka Database
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function switchSchoolAsSuperadmin(targetSchoolKey) {
+      if (SCHOOL_CREDENTIALS[targetSchoolKey]) {
+        currentLoggedInUser = targetSchoolKey;
+        document.getElementById('sidebar-active-school').innerText = `${SCHOOL_CREDENTIALS[targetSchoolKey].name} (via Admin)`;
+        loadDatabase();
+        switchTab('dashboard');
+        showToast(`Beralih ke basis data ${SCHOOL_CREDENTIALS[targetSchoolKey].name}`);
+      }
+    }
+
+    function openAddSchoolModal() {
+      const modal = document.getElementById('add-school-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function closeAddSchoolModal() {
+      const modal = document.getElementById('add-school-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function handleAddNewSchool(e) {
+      if (e) e.preventDefault();
+      const name = document.getElementById('modal-new-school-name').value.trim();
+      const user = document.getElementById('modal-new-school-username').value.trim().toLowerCase().replace(/\s+/g, '');
+
+      if (!name || !user) return;
+
+      SCHOOL_CREDENTIALS[user] = { name: name, pass: user };
+
+      const storedExtra = localStorage.getItem("SI_SUPER_M_CUSTOM_SCHOOLS");
+      let customSchools = storedExtra ? JSON.parse(storedExtra) : {};
+      customSchools[user] = { name: name, pass: user };
+      localStorage.setItem("SI_SUPER_M_CUSTOM_SCHOOLS", JSON.stringify(customSchools));
+
+      updateLoginSchoolDropdown();
+      closeAddSchoolModal();
+      renderSuperadminTable();
+      showToast(`Sekolah ${name} berhasil didaftarkan!`);
+    }
+
+    // ====================================================
+    // RENDER ALL DATA & UI UPDATES
+    // ====================================================
+    function renderAll() {
+      // 1. Header Identitas
+      const actPeriod = getActivePeriodKey();
+      const tapelEl = document.getElementById('header-tapel');
+      if (tapelEl) tapelEl.innerText = `TP. ${actPeriod}`;
+
+      const subtitleEl = document.getElementById('school-subtitle');
+      if (subtitleEl) subtitleEl.innerText = `${db.settings.sekolah} • Kabupaten Sumenep`;
+
+      const ksEl = document.getElementById('header-ks');
+      if (ksEl) ksEl.innerText = db.settings.kepalaSekolah;
+
+      const nipEl = document.getElementById('header-nip');
+      if (nipEl) nipEl.innerText = `NIP. ${db.settings.nipKs}`;
+
+      // 2. Form Setting Values
+      const setSekolah = document.getElementById('set-sekolah');
+      if (setSekolah) setSekolah.value = db.settings.sekolah || "";
+      const setKs = document.getElementById('set-ks');
+      if (setKs) setKs.value = db.settings.kepalaSekolah || "";
+      const setNipKs = document.getElementById('set-nip-ks');
+      if (setNipKs) setNipKs.value = db.settings.nipKs || "";
+      const setTapel = document.getElementById('set-tapel');
+      if (setTapel) setTapel.value = db.settings.tahunPelajaran || "";
+      const setSem = document.getElementById('set-semester');
+      if (setSem) setSem.value = db.settings.semester || "Ganjil";
+      const setTgl = document.getElementById('set-tanggal-laporan');
+      if (setTgl) setTgl.value = db.settings.tanggalLaporan || "";
+
+      // 3. Quick Period Switcher & Dropdowns
+      normalizePeriods();
+      const quickSelect = document.getElementById('quick-period-select');
+      const supPeriodSelect = document.getElementById('sup-periode');
+      const periodListContainer = document.getElementById('period-list-container');
+      const periodCountBadge = document.getElementById('period-count-badge');
+
+      if (periodCountBadge) {
+        periodCountBadge.innerText = `${db.periods.length} Periode`;
+      }
+
+      // Kumpulkan daftar opsi untuk dropdown
+      const periodOptions = db.periods.map(p => ({
+        key: `${p.tapel} - ${p.sem}`,
+        tapel: p.tapel,
+        sem: p.sem,
+        active: Boolean(p.active)
+      }));
+
+      if (quickSelect) {
+        quickSelect.innerHTML = periodOptions.map(p => `
+          <option value="${p.key}" ${p.active ? 'selected' : ''}>${p.key}</option>
+        `).join('');
+      }
+
+      if (supPeriodSelect) {
+        supPeriodSelect.innerHTML = periodOptions.map(p => `
+          <option value="${p.key}" ${p.active ? 'selected' : ''}>${p.key}</option>
+        `).join('');
+      }
+
+      if (periodListContainer) {
+        periodListContainer.innerHTML = db.periods.map(p => {
+          const pKey = `${p.tapel} - ${p.sem}`;
+          const isAct = Boolean(p.active);
+          return `
+            <div class="flex items-center justify-between p-2.5 rounded-xl border transition ${
+              isAct ? 'bg-emerald-50 border-emerald-400 shadow-sm' : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
+            } text-xs">
+              <div class="truncate mr-2">
+                <div class="flex items-center gap-1.5">
+                  <span class="font-extrabold text-slate-800">${p.tapel} - ${p.sem}</span>
+                  ${isAct ? '<span class="px-2 py-0.5 bg-emerald-700 text-white font-extrabold rounded-md text-[9px]">AKTIF</span>' : ''}
+                </div>
+                <div class="text-[10px] text-slate-500 truncate mt-0.5">
+                  <i class="fa-regular fa-calendar text-[9px] mr-1"></i>${p.tgl || '-'}
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5 flex-shrink-0">
+                ${!isAct ? `
+                  <button type="button" onclick="switchActivePeriod('${pKey}')" class="px-2.5 py-1 bg-white hover:bg-emerald-600 hover:text-white border border-slate-300 hover:border-emerald-600 text-slate-700 rounded-lg text-[10px] font-bold transition shadow-xs">
+                    Aktifkan
+                  </button>
+                ` : ''}
+                <button type="button" onclick="deletePeriod('${p.id}', event)" class="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition" title="Hapus Periode">
+                  <i class="fa-solid fa-trash-can text-xs"></i>
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // 4. Guru Dropdown & Table
+      const supGuruSelect = document.getElementById('sup-guru-id');
+      const filterGuruLaporan = document.getElementById('filter-guru-laporan');
+      const guruTableBody = document.getElementById('guru-table-body');
+      const statGuruBadge = document.getElementById('stat-guru-badge');
+      const guruCountBadge = document.getElementById('guru-count-badge');
+
+      if (statGuruBadge) statGuruBadge.innerText = db.teachers.length;
+      if (guruCountBadge) guruCountBadge.innerText = `${db.teachers.length} Guru Terdaftar`;
+
+      if (supGuruSelect) {
+        supGuruSelect.innerHTML = '<option value="" disabled selected>-- Pilih Guru Terdaftar --</option>' + db.teachers.map(g => `
+          <option value="${g.id}">${g.nama} (${g.mapel})</option>
+        `).join('');
+      }
+
+      if (guruTableBody) {
+        guruTableBody.innerHTML = db.teachers.map((g, idx) => `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="py-3 px-3 text-center font-bold text-slate-400">${idx + 1}</td>
+            <td class="py-3 px-3 font-bold text-slate-800">${g.nama}</td>
+            <td class="py-3 px-3 text-slate-500">${g.nip}</td>
+            <td class="py-3 px-3"><span class="px-2 py-0.5 bg-emerald-50 text-emerald-800 rounded font-semibold">${g.mapel}</span></td>
+            <td class="py-3 px-3 text-slate-600">${g.kelas}</td>
+            <td class="py-3 px-3 text-center">
+              <button onclick="deleteTeacher('${g.id}')" class="text-rose-600 hover:text-rose-800 p-1" title="Hapus Guru">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      // 5. Filter Supervisi berdasarkan Periode Aktif
+      const periodSupervisions = db.supervisions.filter(s => (s.periode || actPeriod) === actPeriod);
+
+      // KPI Metrics & Badges
+      const statGuruEl = document.getElementById('stat-guru');
+      if (statGuruEl) statGuruEl.innerText = db.teachers.length;
+
+      const statSupEl = document.getElementById('stat-supervisi');
+      if (statSupEl) statSupEl.innerText = periodSupervisions.length;
+
+      const dashPeriodBadge = document.getElementById('dash-period-badge');
+      if (dashPeriodBadge) dashPeriodBadge.innerText = `TP. ${actPeriod}`;
+
+      // Kartu Belum Disupervisi
+      const supervisedTeacherIds = new Set(periodSupervisions.map(s => s.guruId));
+      const belumSupervisiCount = Math.max(0, db.teachers.length - supervisedTeacherIds.size);
+      const statBelumEl = document.getElementById('stat-belum-supervisi');
+      const badgeBelumEl = document.getElementById('belum-supervisi-badge');
+      if (statBelumEl) statBelumEl.innerText = belumSupervisiCount;
+      if (badgeBelumEl) {
+        if (belumSupervisiCount === 0 && db.teachers.length > 0) {
+          badgeBelumEl.innerText = "Semua Sudah Disupervisi 🎉";
+          badgeBelumEl.className = "text-[11px] font-bold text-emerald-700 mt-0.5";
+        } else {
+          badgeBelumEl.innerText = "Perlu Dijadwalkan";
+          badgeBelumEl.className = "text-[11px] font-bold text-rose-700 mt-0.5";
+        }
+      }
+
+      // Rata-rata Skor & Predikat Dominan
+      const totalSkor = periodSupervisions.reduce((acc, curr) => acc + (parseFloat(curr.skorAkhir) || 0), 0);
+      const rataRata = periodSupervisions.length > 0 ? (totalSkor / periodSupervisions.length).toFixed(1) : 0;
+      const statRataEl = document.getElementById('stat-rata');
+      if (statRataEl) statRataEl.innerText = rataRata;
+
+      const predikatCount = {};
+      periodSupervisions.forEach(s => {
+        predikatCount[s.predikat] = (predikatCount[s.predikat] || 0) + 1;
+      });
+      let dominantPredikat = "-";
+      let maxP = 0;
+      Object.keys(predikatCount).forEach(k => {
+        if (predikatCount[k] > maxP) {
+          maxP = predikatCount[k];
+          dominantPredikat = k;
+        }
+      });
+      const statPredikatEl = document.getElementById('stat-predikat');
+      if (statPredikatEl) {
+        statPredikatEl.innerText = dominantPredikat;
+        statPredikatEl.title = dominantPredikat;
+      }
+
+      // 6. Bar Chart & Predikat Distribution
+      const barContainer = document.getElementById('bar-chart-container');
+      if (barContainer) {
+        if (periodSupervisions.length === 0) {
+          barContainer.innerHTML = `<div class="w-full text-center py-10 text-slate-400 text-xs font-semibold">Belum ada rekaman supervisi pada periode aktif</div>`;
+        } else {
+          barContainer.innerHTML = periodSupervisions.slice(0, 10).map(s => {
+            const g = db.teachers.find(t => t.id === s.guruId) || { nama: "Guru" };
+            const heightPercent = Math.min(100, Math.max(15, s.skorAkhir));
+            const barColor = s.skorAkhir >= 90 ? 'bg-emerald-600' : s.skorAkhir >= 75 ? 'bg-blue-600' : 'bg-amber-500';
+            const shortName = g.nama.split(' ')[0] || "Guru";
+            return `
+              <div class="flex-1 flex flex-col items-center h-full justify-end group">
+                <div class="text-[10px] font-extrabold text-slate-700 mb-1 opacity-0 group-hover:opacity-100 transition">${s.skorAkhir}</div>
+                <div class="w-full max-w-[36px] ${barColor} rounded-t-lg transition-all duration-500 hover:brightness-110 shadow-sm" style="height: ${heightPercent}%;"></div>
+                <div class="text-[10px] text-slate-500 truncate max-w-[60px] text-center mt-1.5 font-medium" title="${g.nama}">${shortName}</div>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+
+      const predikatBarsContainer = document.getElementById('predikat-bars-container');
+      if (predikatBarsContainer) {
+        const totalSup = periodSupervisions.length || 1;
+        const categories = [
+          { name: "Amat Baik", color: "bg-emerald-500", text: "text-emerald-700" },
+          { name: "Baik", color: "bg-blue-500", text: "text-blue-700" },
+          { name: "Cukup", color: "bg-amber-500", text: "text-amber-700" },
+          { name: "Kurang", color: "bg-rose-500", text: "text-rose-700" }
+        ];
+
+        predikatBarsContainer.innerHTML = categories.map(c => {
+          const cnt = predikatCount[c.name] || 0;
+          const pct = Math.round((cnt / totalSup) * 100);
+          return `
+            <div>
+              <div class="flex justify-between text-xs mb-1 font-semibold">
+                <span class="${c.text}">${c.name}</span>
+                <span class="text-slate-600">${cnt} Guru (${periodSupervisions.length > 0 ? pct : 0}%)</span>
+              </div>
+              <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                <div class="${c.color} h-2 rounded-full transition-all duration-500" style="width: ${periodSupervisions.length > 0 ? pct : 0}%"></div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // 7. Recent Dashboard Table & Full Supervision Table
+      const dashTbody = document.getElementById('dashboard-table-body');
+      const fullTbody = document.getElementById('full-supervision-table-body');
+      const statSupBadge = document.getElementById('stat-supervisi-badge');
+      const listPeriodBadge = document.getElementById('list-period-badge');
+
+      if (statSupBadge) statSupBadge.innerText = periodSupervisions.length;
+      if (listPeriodBadge) listPeriodBadge.innerText = `Periode: ${actPeriod}`;
+
+      if (dashTbody) {
+        if (periodSupervisions.length === 0) {
+          dashTbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-slate-400">Belum ada rekaman supervisi pada periode ini</td></tr>`;
+        } else {
+          dashTbody.innerHTML = periodSupervisions.slice(0, 5).map((s, idx) => {
+            const g = db.teachers.find(t => t.id === s.guruId) || { nama: "-", mapel: "-" };
+            return `
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-3 text-center font-bold text-slate-400">${idx + 1}</td>
+                <td class="py-3 px-3">
+                  <div class="font-bold text-slate-800">${g.nama}</div>
+                  <div class="text-[11px] text-slate-500">${g.mapel}</div>
+                </td>
+                <td class="py-3 px-3 text-center">
+                  <span class="px-2.5 py-1 rounded-full font-black ${s.skorAkhir >= 90 ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-800'}">${s.skorAkhir}</span>
+                  <div class="text-[10px] text-slate-500 mt-0.5">${s.predikat}</div>
+                </td>
+                <td class="py-3 px-3">
+                  <div class="font-medium text-slate-700 truncate max-w-xs">${s.topik}</div>
+                  <div class="text-[11px] text-slate-500 truncate max-w-xs">${s.temuan}</div>
+                </td>
+                <td class="py-3 px-3 text-center">
+                  <button onclick="viewSupervisiDetail('${s.id}')" class="px-3 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-lg font-bold transition">
+                    Lihat Laporan &rarr;
+                  </button>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+      }
+
+      if (fullTbody) {
+        if (periodSupervisions.length === 0) {
+          fullTbody.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-slate-400">Belum ada data hasil supervisi pada periode aktif</td></tr>`;
+        } else {
+          fullTbody.innerHTML = periodSupervisions.map((s, idx) => {
+            const g = db.teachers.find(t => t.id === s.guruId) || { nama: "-", mapel: "-", kelas: "-" };
+            return `
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-3 text-center font-bold text-slate-400">${idx + 1}</td>
+                <td class="py-3 px-3">
+                  <div class="font-bold text-slate-800">${g.nama}</div>
+                  <div class="text-[11px] text-slate-500">${g.mapel} • ${g.kelas}</div>
+                </td>
+                <td class="py-3 px-3 text-center font-semibold text-emerald-800">${s.skorTelaah}</td>
+                <td class="py-3 px-3 text-center font-semibold text-blue-800">${s.skorObservasi}</td>
+                <td class="py-3 px-3 text-center">
+                  <span class="px-2.5 py-1 rounded-full font-extrabold ${s.skorAkhir >= 90 ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-800'}">${s.skorAkhir}</span>
+                  <div class="text-[10px] text-slate-500 mt-0.5">${s.predikat}</div>
+                </td>
+                <td class="py-3 px-3">
+                  <div class="font-semibold text-slate-700">${s.topik}</div>
+                  <div class="text-[11px] text-slate-500 truncate max-w-sm">${s.temuan}</div>
+                </td>
+                <td class="py-3 px-3 text-center space-x-1.5">
+                  <button onclick="viewSupervisiDetail('${s.id}')" class="px-2.5 py-1 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-[11px] font-bold transition shadow-sm">
+                    <i class="fa-solid fa-file-invoice"></i> Laporan
+                  </button>
+                  <button onclick="deleteSupervisi('${s.id}')" class="p-1 text-rose-600 hover:text-rose-800 transition" title="Hapus">
+                    <i class="fa-solid fa-trash-can"></i>
+                  </button>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+      }
+
+      // Filter Guru di Lembar Laporan Individu
+      if (filterGuruLaporan) {
+        filterGuruLaporan.innerHTML = periodSupervisions.map(s => {
+          const g = db.teachers.find(t => t.id === s.guruId) || { nama: "-" };
+          return `<option value="${s.id}">${g.nama} - ${s.topik}</option>`;
+        }).join('');
+      }
+    }
+
+    // ====================================================
+    // TOAST NOTIFICATION & CONFIRMATION MODAL HELPER
+    // ====================================================
+    function showToast(message, type = "info") {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+
+      const toast = document.createElement('div');
+      toast.className = `flex items-center space-x-3 px-4 py-3 rounded-2xl shadow-xl border text-xs md:text-sm font-semibold pointer-events-auto transform transition-all duration-300 translate-y-2 opacity-0 ${
+        type === 'warning' 
+          ? 'bg-amber-500 text-slate-950 border-amber-600' 
+          : type === 'error' 
+          ? 'bg-rose-600 text-white border-rose-700' 
+          : 'bg-emerald-900 text-white border-emerald-700'
+      }`;
+
+      const icon = type === 'warning' 
+        ? 'fa-triangle-exclamation' 
+        : type === 'error' 
+        ? 'fa-circle-xmark' 
+        : 'fa-circle-check';
+
+      toast.innerHTML = `
+        <i class="fa-solid ${icon} text-base flex-shrink-0"></i>
+        <span>${message}</span>
+      `;
+
+      container.appendChild(toast);
+
+      // Animate in
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      });
+
+      // Auto dismiss
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => {
+          if (toast.parentNode) toast.parentNode.removeChild(toast);
+        }, 300);
+      }, 3500);
+    }
+
+    let confirmCallbackAction = null;
+
+    function openConfirmModal(title, message, onConfirm) {
+      const modal = document.getElementById('confirm-modal');
+      const titleEl = document.getElementById('confirm-title');
+      const msgEl = document.getElementById('confirm-message');
+      const yesBtn = document.getElementById('confirm-yes-btn');
+
+      if (!modal) {
+        if (typeof onConfirm === 'function') onConfirm();
+        return;
+      }
+
+      if (titleEl) titleEl.innerText = title;
+      if (msgEl) msgEl.innerText = message;
+      confirmCallbackAction = onConfirm;
+
+      yesBtn.onclick = function() {
+        if (typeof confirmCallbackAction === 'function') {
+          confirmCallbackAction();
+        }
+        closeConfirmModal();
+      };
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeConfirmModal() {
+      const modal = document.getElementById('confirm-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+      confirmCallbackAction = null;
+    }
+
+    // ====================================================
+    // BACKUP & RESTORE DATABASE JSON
+    // ====================================================
+    function exportDatabase() {
+      const activeUser = currentLoggedInUser || "DEFAULT";
+      const filename = `SI_SUPER_M_${activeUser}_${new Date().toISOString().slice(0, 10)}.json`;
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", filename);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast("Data cadangan JSON berhasil diunduh!");
+    }
+
+    function importDatabase(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (imported && typeof imported === 'object') {
+            db = imported;
+            saveDatabase(true);
+            applySchoolLogoUI();
+            showToast("Database berhasil dipulihkan!");
+          } else {
+            showToast("Format berkas JSON tidak valid", "error");
+          }
+        } catch (err) {
+          showToast("Gagal membaca berkas JSON: " + err.message, "error");
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = "";
+    }
+
+    // ====================================================
+    // RENDER LAPORAN WORD / PRINT A4
+    // ====================================================
+    function renderReportView() {
+      const container = document.getElementById('report-container');
+      const jenisEl = document.getElementById('jenis-laporan');
+      const filterGuruEl = document.getElementById('filter-guru-laporan');
+      if (!container || !jenisEl) return;
+
+      const jenis = jenisEl.value;
+      const actPeriod = getActivePeriodKey();
+      const periodSupervisions = db.supervisions.filter(s => (s.periode || actPeriod) === actPeriod);
+
+      if (filterGuruEl) {
+        if (jenis === 'individu') {
+          filterGuruEl.classList.remove('hidden');
+        } else {
+          filterGuruEl.classList.add('hidden');
+        }
+      }
+
+      const logoUrl = getSchoolLogo();
+      const schoolName = db.settings.sekolah || "SMA NEGERI";
+      const ksName = db.settings.kepalaSekolah || "-";
+      const nipKs = db.settings.nipKs || "-";
+      const tglLaporan = db.settings.tanggalLaporan || "Sumenep, 24 Oktober 2026";
+
+      if (jenis === 'rekap') {
+        // LAMPIRAN 3: LAPORAN EVALUASI, REFLEKSI, DAN TINDAK LANJUT SESUAI MODUL KS
+        let tableRowsHtml = "";
+        if (periodSupervisions.length === 0) {
+          tableRowsHtml = `<tr><td colspan="7" style="text-align:center; padding:15px; font-style:italic;">Belum ada data rekaman supervisi pada periode ${actPeriod}</td></tr>`;
+        } else {
+          tableRowsHtml = periodSupervisions.map((s, idx) => {
+            const g = db.teachers.find(t => t.id === s.guruId) || { nama: "-", mapel: "-", kelas: "-" };
+            return `
+              <tr>
+                <td style="text-align:center; width:30px;">${idx + 1}</td>
+                <td>
+                  <strong>${g.nama}</strong><br>
+                  <span style="font-size:9pt; color:#444;">NIP. ${g.nip}</span><br>
+                  <span style="font-size:9pt; font-style:italic; color:#064e3b;">${g.mapel} (${g.kelas})</span>
+                </td>
+                <td>
+                  <strong>Skor ${s.skorAkhir} (${s.predikat.toLowerCase()})</strong><br>
+                  <span>${s.temuan || "-"}</span>
+                </td>
+                <td>${s.refleksi || "-"}</td>
+                <td>${s.tindakLanjut || "-"}</td>
+                <td>${s.peranKs || "-"}</td>
+                <td style="text-align:center; font-size:9.5pt;">${s.waktu || "-"}</td>
+              </tr>
+            `;
+          }).join('');
+        }
+
+        container.innerHTML = `
+          <!-- SHEET 1: SAMPUL RESMI (COVER PAGE) -->
+          <div class="word-a4-sheet flex flex-col justify-between text-center" style="min-height: 297mm; page-break-after: always;">
+            <div>
+              <div style="font-size: 13pt; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">
+                MUSYAWARAH KERJA KEPALA SEKOLAH (MKKS) SMA<br>
+                KABUPATEN SUMENEP
+              </div>
+              <div style="font-size: 10pt; color: #555; margin-top: 3px;">
+                Sistem Penjaminan Mutu & Supervisi Pembelajaran Mendalam (Deep Learning)
+              </div>
+              <div style="border-bottom: 3px double #000; margin: 15px auto; width: 90%;"></div>
+            </div>
+
+            <div class="my-auto py-8">
+              <div style="width: 130px; height: 130px; margin: 0 auto 25px auto; border: 2px solid #ddd; padding: 6px; border-radius: 12px; background: #fff;">
+                <img src="${logoUrl}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
+              </div>
+              
+              <div style="font-size: 17pt; font-weight: bold; text-transform: uppercase; margin-bottom: 8px; line-height: 1.3;">
+                LAPORAN EVALUASI, REFLEKSI, DAN TINDAK LANJUT<br>HASIL SUPERVISI AKADEMIK
+              </div>
+              <div style="font-size: 13pt; font-weight: bold; color: #064e3b; margin-bottom: 20px;">
+                SUPERVISI PEMBELAJARAN MENDALAM
+              </div>
+              <div style="display: inline-block; padding: 6px 18px; border: 1.5px solid #000; font-weight: bold; font-size: 11pt; border-radius: 4px; background: #f8fafc;">
+                TAHUN PELAJARAN ${actPeriod}
+              </div>
+            </div>
+
+            <div style="margin-top: 30px; font-size: 11pt;">
+              <table style="width: 80%; margin: 0 auto; border: none !important; font-size: 11pt;">
+                <tr style="border: none !important;">
+                  <td style="border: none !important; text-align: left; width: 38%; font-weight: bold; padding: 4px 6px;">Satuan Pendidikan</td>
+                  <td style="border: none !important; text-align: left; width: 4%; padding: 4px 0;">:</td>
+                  <td style="border: none !important; text-align: left; width: 58%; font-weight: bold; padding: 4px 6px;">${schoolName}</td>
+                </tr>
+                <tr style="border: none !important;">
+                  <td style="border: none !important; text-align: left; font-weight: bold; padding: 4px 6px;">Kepala Sekolah</td>
+                  <td style="border: none !important; text-align: left; padding: 4px 0;">:</td>
+                  <td style="border: none !important; text-align: left; padding: 4px 6px;">${ksName}</td>
+                </tr>
+                <tr style="border: none !important;">
+                  <td style="border: none !important; text-align: left; font-weight: bold; padding: 4px 6px;">NIP Kepala Sekolah</td>
+                  <td style="border: none !important; text-align: left; padding: 4px 0;">:</td>
+                  <td style="border: none !important; text-align: left; padding: 4px 6px;">${nipKs}</td>
+                </tr>
+                <tr style="border: none !important;">
+                  <td style="border: none !important; text-align: left; font-weight: bold; padding: 4px 6px;">Kabupaten / Provinsi</td>
+                  <td style="border: none !important; text-align: left; padding: 4px 0;">:</td>
+                  <td style="border: none !important; text-align: left; padding: 4px 6px;">Kabupaten Sumenep, Jawa Timur</td>
+                </tr>
+              </table>
+              <div style="margin-top: 35px; font-weight: bold; font-size: 10pt; color: #444;">
+                MKKS SMA KABUPATEN SUMENEP &copy; 2026
+              </div>
+            </div>
+          </div>
+
+          <!-- SHEET 2: KONTEN LAPORAN LENGKAP (LAMPIRAN 3 SESUAI MODUL KS) -->
+          <div class="word-a4-sheet" style="min-height: 297mm; page-break-after: always;">
+            <div style="font-size: 9.5pt; font-style: italic; color: #555; margin-bottom: 6px;">
+              Lampiran 3. Contoh Laporan Evaluasi, Refleksi dan Tindak lanjut Hasil Supervisi Akademik
+            </div>
+
+            <!-- HEADER LAPORAN -->
+            <div style="text-align: center; margin-bottom: 20px;">
+              <div style="font-size: 13pt; font-weight: bold; text-transform: uppercase; line-height: 1.3;">
+                LAPORAN EVALUASI, REFLEKSI, DAN TINDAK LANJUT<br>
+                HASIL SUPERVISI AKADEMIK
+              </div>
+              <div style="font-size: 12pt; font-weight: bold; text-transform: uppercase; color: #064e3b; margin-top: 4px;">
+                ${schoolName}
+              </div>
+              <div style="font-size: 10.5pt; font-weight: bold; margin-top: 2px;">
+                Tahun Pelajaran ${actPeriod}
+              </div>
+              <div style="font-size: 10pt; margin-top: 2px;">
+                Kepala Sekolah: <strong>${ksName}</strong>
+              </div>
+              <div style="border-bottom: 2px solid #000; margin-top: 10px;"></div>
+            </div>
+
+            <!-- POIN A: LATAR BELAKANG -->
+            <div style="margin-bottom: 12px; font-size: 10.5pt; text-align: justify; line-height: 1.45;">
+              <div style="font-weight: bold;">A. LATAR BELAKANG</div>
+              <p style="margin: 4px 0 6px 0; text-indent: 25px;">
+                Supervisi akademik yang telah dilaksanakan tidak berhenti pada observasi dan pemberian umpan balik, tetapi perlu ditindaklanjuti melalui evaluasi, refleksi, dan tindak lanjut agar memberikan dampak nyata terhadap peningkatan kualitas pembelajaran.
+              </p>
+              <p style="margin: 0 0 6px 0; text-indent: 25px;">
+                Berdasarkan laporan pelaksanaan supervisi akademik, masih ditemukan kesenjangan dalam praktik pembelajaran, khususnya pada keterlibatan murid, pembelajaran kontekstual, asesmen berbasis HOTS, serta integrasi Koding dan Kecerdasan Artifisial (KKA).
+              </p>
+              <p style="margin: 0; text-indent: 25px;">
+                Oleh karena itu, diperlukan program evaluasi, refleksi, dan tindak lanjut yang berbasis data, reflektif, dan berkelanjutan.
+              </p>
+            </div>
+
+            <!-- POIN B: TUJUAN -->
+            <div style="margin-bottom: 12px; font-size: 10.5pt; line-height: 1.4;">
+              <div style="font-weight: bold;">B. TUJUAN</div>
+              <ol style="margin: 4px 0 0 20px; padding: 0;">
+                <li>Mengidentifikasi hasil supervisi akademik secara objektif berbasis data</li>
+                <li>Menganalisis penyebab kesenjangan pembelajaran</li>
+                <li>Menetapkan prioritas perbaikan pembelajaran</li>
+                <li>Menyusun tindak lanjut yang spesifik dan terukur</li>
+                <li>Memastikan keberlanjutan perbaikan melalui monitoring</li>
+              </ol>
+            </div>
+
+            <!-- POIN C: SASARAN -->
+            <div style="margin-bottom: 12px; font-size: 10.5pt; line-height: 1.4;">
+              <div style="font-weight: bold;">C. SASARAN</div>
+              <p style="margin: 4px 0 0 0; text-indent: 25px;">
+                Seluruh guru ${schoolName} berdasarkan hasil supervisi akademik.
+              </p>
+            </div>
+
+            <!-- POIN D: RUANG LINGKUP -->
+            <div style="margin-bottom: 12px; font-size: 10.5pt; line-height: 1.4;">
+              <div style="font-weight: bold;">D. RUANG LINGKUP</div>
+              <ol style="margin: 4px 0 0 20px; padding: 0;">
+                <li>Evaluasi hasil supervisi (data & skor)</li>
+                <li>Refleksi berbasis analisis penyebab</li>
+                <li>Penyusunan tindak lanjut (RTL)</li>
+                <li>Pendampingan guru (coaching, mentoring, pelatihan)</li>
+                <li>Monitoring dan supervisi ulang</li>
+              </ol>
+            </div>
+
+            <!-- POIN E: PROGRAM KEGIATAN -->
+            <div style="margin-bottom: 12px; font-size: 10.5pt; line-height: 1.4;">
+              <div style="font-weight: bold;">E. PROGRAM KEGIATAN</div>
+              <div style="margin-top: 4px; margin-left: 10px;">
+                <strong>1. Evaluasi</strong>
+                <ul style="margin: 2px 0 6px 20px; list-style-type: disc; padding: 0;">
+                  <li>Mengumpulkan data pra-observasi, observasi, dan pasca-observasi</li>
+                  <li>Menganalisis data secara kuantitatif dan kualitatif</li>
+                  <li>Mengidentifikasi capaian dan kesenjangan pembelajaran</li>
+                </ul>
+
+                <strong>2. Refleksi</strong>
+                <ul style="margin: 2px 0 6px 20px; list-style-type: disc; padding: 0;">
+                  <li>Mengkaji penyebab masalah pembelajaran</li>
+                  <li>Mengidentifikasi faktor pendukung dan penghambat</li>
+                  <li>Menentukan prioritas perbaikan</li>
+                </ul>
+
+                <strong>3. Tindak Lanjut</strong>
+                <ul style="margin: 2px 0 0 20px; list-style-type: disc; padding: 0;">
+                  <li>Menyusun perbaikan yang spesifik dan terukur</li>
+                  <li>Melaksanakan coaching, mentoring, atau pelatihan</li>
+                  <li>Menetapkan jadwal monitoring dan supervisi ulang</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- SHEET 3: TABEL HASIL EVALUASI, REFLEKSI, RTL & PENUTUP -->
+          <div class="word-a4-sheet" style="min-height: 297mm;">
+            <!-- POIN F: HASIL EVALUASI, REFLEKSI, DAN TINDAK LANJUT -->
+            <div style="margin-bottom: 18px;">
+              <div style="font-weight: bold; font-size: 10.5pt; margin-bottom: 8px;">
+                F. HASIL EVALUASI, REFLEKSI, DAN TINDAK LANJUT
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width: 28px;">No</th>
+                    <th style="width: 130px;">Nama Pendidik</th>
+                    <th style="width: 140px;">Hasil Evaluasi (Data & Skor)</th>
+                    <th>Refleksi (Analisis Penyebab)</th>
+                    <th>Tindak Lanjut (Perbaikan Spesifik)</th>
+                    <th style="width: 130px;">Peran Kepala Sekolah</th>
+                    <th style="width: 75px;">Waktu</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${tableRowsHtml}
+                </tbody>
+              </table>
+            </div>
+
+            <!-- POIN G: SIMPULAN -->
+            <div style="margin-bottom: 14px; font-size: 10.5pt; text-align: justify; line-height: 1.45;">
+              <div style="font-weight: bold;">G. SIMPULAN</div>
+              <p style="margin: 4px 0 0 0; text-indent: 25px;">
+                Hasil evaluasi menunjukkan bahwa pembelajaran sudah berjalan dengan baik, namun masih perlu penguatan pada keterlibatan murid, pembelajaran kontekstual, asesmen HOTS, dan integrasi KKA. Melalui refleksi berbasis data, diperoleh pemahaman bahwa permasalahan utama terletak pada strategi pembelajaran dan pemahaman guru terhadap Pembelajaran Mendalam. Tindak lanjut difokuskan pada perbaikan spesifik melalui coaching, pendampingan, dan pelatihan yang berkelanjutan.
+              </p>
+            </div>
+
+            <!-- POIN H: PENUTUP -->
+            <div style="margin-bottom: 25px; font-size: 10.5pt; text-align: justify; line-height: 1.45;">
+              <div style="font-weight: bold;">H. PENUTUP</div>
+              <p style="margin: 4px 0 6px 0; text-indent: 25px;">
+                Program evaluasi, refleksi, dan tindak lanjut ini disusun untuk memastikan bahwa supervisi akademik tidak berhenti pada kegiatan observasi, tetapi berlanjut pada perbaikan nyata dalam pembelajaran.
+              </p>
+              <p style="margin: 0; text-indent: 25px;">
+                Melalui pendekatan berbasis data, reflektif, dan berkelanjutan, diharapkan kualitas pembelajaran meningkat dan berdampak pada pengalaman belajar murid yang lebih bermakna, berkesadaran, dan menggembirakan.
+              </p>
+            </div>
+
+            <!-- TANDA TANGAN RESMI PENGESAHAN -->
+            <div style="margin-top: 35px; display: flex; justify-content: flex-end; page-break-inside: avoid;">
+              <div style="width: 250px; text-align: left; font-size: 10.5pt;">
+                <div>${tglLaporan}</div>
+                <div style="margin-top: 2px;">Kepala Sekolah,</div>
+                <div style="height: 65px;"></div>
+                <div style="font-weight: bold; text-decoration: underline;">${ksName}</div>
+                <div>NIP. ${nipKs}</div>
+              </div>
+            </div>
+          </div>
+        `;
+      } else {
+        // LAMPIRAN 5 & 6: INSTRUMEN INDIVIDU GURU
+        let selectedSup = null;
+        const targetSupId = filterGuruEl ? filterGuruEl.value : null;
+
+        if (targetSupId) {
+          selectedSup = db.supervisions.find(s => s.id === targetSupId);
+        }
+        if (!selectedSup && periodSupervisions.length > 0) {
+          selectedSup = periodSupervisions[0];
+        }
+
+        if (!selectedSup) {
+          container.innerHTML = `
+            <div class="word-a4-sheet flex items-center justify-center text-center p-10 text-slate-500">
+              <div>
+                <i class="fa-solid fa-folder-open text-4xl mb-3 text-slate-400"></i>
+                <p class="font-bold">Belum ada rekaman supervisi individu guru pada periode ini.</p>
+                <p class="text-xs mt-1">Silakan input data supervisi terlebih dahulu pada menu "Input Hasil Supervisi".</p>
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        const g = db.teachers.find(t => t.id === selectedSup.guruId) || { nama: "-", nip: "-", mapel: "-", kelas: "-" };
+
+        // Detail Telaah rows
+        const rowsTelaahHtml = INSTRUMEN_TELAAH.map((item, idx) => {
+          const detail = (selectedSup.detailTelaah && selectedSup.detailTelaah[idx]) ? selectedSup.detailTelaah[idx] : { skala: 3, komentar: "-" };
+          return `
+            <tr>
+              <td style="text-align:center; width:25px;">${item.no}</td>
+              <td>${item.teks}</td>
+              <td style="text-align:center; width:45px; font-weight:bold;">${detail.skala}</td>
+              <td style="font-size:9.5pt;">${detail.komentar || "-"}</td>
+            </tr>
+          `;
+        }).join('');
+
+        // Detail Observasi rows
+        const rowsObsHtml = INSTRUMEN_OBSERVASI.map((item, idx) => {
+          const detail = (selectedSup.detailObservasi && selectedSup.detailObservasi[idx]) ? selectedSup.detailObservasi[idx] : { skala: 3, bukti: "-", catatan: "-" };
+          return `
+            <tr>
+              <td style="text-align:center; width:25px;">${item.no}</td>
+              <td>${item.teks}</td>
+              <td style="text-align:center; width:45px; font-weight:bold;">${detail.skala}</td>
+              <td style="font-size:9.5pt;">${detail.bukti || "-"}</td>
+              <td style="font-size:9.5pt;">${detail.catatan || "-"}</td>
+            </tr>
+          `;
+        }).join('');
+
+        const kt = selectedSup.kualitatifTelaah || { kelebihan: "-", tingkatkan: "-", rekomendasi: "-" };
+        const ko = selectedSup.kualitatifObservasi || { kelebihan: "-", tingkatkan: "-", rekomendasi: "-" };
+
+        container.innerHTML = `
+          <!-- SHEET 1: TELAAH PERENCANAAN (LAMPIRAN 5) -->
+          <div class="word-a4-sheet" style="min-height: 297mm; page-break-after: always;">
+            <div style="display: flex; align-items: center; border-bottom: 2.5px solid #000; padding-bottom: 8px; margin-bottom: 14px;">
+              <div style="width: 60px; height: 60px; margin-right: 12px; flex-shrink: 0;">
+                <img src="${logoUrl}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
+              </div>
+              <div style="flex: 1; text-align: center;">
+                <div style="font-size: 10.5pt; font-weight: bold; text-transform: uppercase;">MUSYAWARAH KERJA KEPALA SEKOLAH (MKKS) SMA KABUPATEN SUMENEP</div>
+                <div style="font-size: 12pt; font-weight: bold; text-transform: uppercase;">${schoolName}</div>
+                <div style="font-size: 8.5pt; color: #444;">Instrumen Penjaminan Mutu & Supervisi Pembelajaran Mendalam</div>
+              </div>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 12px;">
+              <div style="font-size: 11.5pt; font-weight: bold; text-transform: uppercase;">
+                LAMPIRAN 5: INSTRUMEN TELAAH PERENCANAAN PEMBELAJARAN
+              </div>
+            </div>
+
+            <!-- TABEL IDENTITAS -->
+            <table style="margin-bottom: 14px; font-size: 10pt; border: none !important;">
+              <tr style="border: none !important;">
+                <td style="border: none !important; width: 22%; padding: 2px 4px; font-weight: bold;">Nama Pendidik</td>
+                <td style="border: none !important; width: 3%; padding: 2px 0;">:</td>
+                <td style="border: none !important; width: 40%; padding: 2px 4px;">${g.nama}</td>
+                <td style="border: none !important; width: 15%; padding: 2px 4px; font-weight: bold;">Tanggal</td>
+                <td style="border: none !important; width: 3%; padding: 2px 0;">:</td>
+                <td style="border: none !important; width: 17%; padding: 2px 4px;">${selectedSup.tanggal || "-"}</td>
+              </tr>
+              <tr style="border: none !important;">
+                <td style="border: none !important; padding: 2px 4px; font-weight: bold;">NIP / NUPTK</td>
+                <td style="border: none !important; padding: 2px 0;">:</td>
+                <td style="border: none !important; padding: 2px 4px;">${g.nip}</td>
+                <td style="border: none !important; padding: 2px 4px; font-weight: bold;">Mata Pelajaran</td>
+                <td style="border: none !important; padding: 2px 0;">:</td>
+                <td style="border: none !important; padding: 2px 4px;">${g.mapel}</td>
+              </tr>
+              <tr style="border: none !important;">
+                <td style="border: none !important; padding: 2px 4px; font-weight: bold;">Kelas / Fase</td>
+                <td style="border: none !important; padding: 2px 0;">:</td>
+                <td style="border: none !important; padding: 2px 4px;">${g.kelas}</td>
+                <td style="border: none !important; padding: 2px 4px; font-weight: bold;">Topik / Materi</td>
+                <td style="border: none !important; padding: 2px 0;">:</td>
+                <td style="border: none !important; padding: 2px 4px;">${selectedSup.topik || "-"}</td>
+              </tr>
+            </table>
+
+            <!-- TABEL TELAAH PERENCANAAN -->
+            <table style="margin-bottom: 12px;">
+              <thead>
+                <tr>
+                  <th style="width: 25px;">No</th>
+                  <th>Aspek yang Diamati (Telaah Perencanaan)</th>
+                  <th style="width: 50px;">Skala</th>
+                  <th style="width: 170px;">Komentar Kritis</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rowsTelaahHtml}
+                <tr style="font-weight: bold; background-color: #f8fafc;">
+                  <td colspan="2" style="text-align: right; padding-right: 10px;">Nilai Skor Telaah Perencanaan:</td>
+                  <td style="text-align: center; color: #064e3b; font-size: 10.5pt;">${selectedSup.skorTelaah}</td>
+                  <td>${getPredikat(selectedSup.skorTelaah)}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div style="font-size: 9.5pt; margin-top: 8px; line-height: 1.35;">
+              <p><strong>16. Kelebihan Perencanaan:</strong> ${kt.kelebihan}</p>
+              <p><strong>17. Hal yang Perlu Ditingkatkan:</strong> ${kt.tingkatkan}</p>
+              <p><strong>18. Rekomendasi Sesuai Prinsip PM & KKA:</strong> ${kt.rekomendasi}</p>
+            </div>
+          </div>
+
+          <!-- SHEET 2: OBSERVASI PELAKSANAAN (LAMPIRAN 6) -->
+          <div class="word-a4-sheet" style="min-height: 297mm;">
+            <div style="text-align: center; margin-bottom: 14px;">
+              <div style="font-size: 11.5pt; font-weight: bold; text-transform: uppercase;">
+                LAMPIRAN 6: INSTRUMEN OBSERVASI PELAKSANAAN PEMBELAJARAN
+              </div>
+              <div style="font-size: 9.5pt; font-style: italic;">Pendidik: ${g.nama} • Mata Pelajaran: ${g.mapel}</div>
+            </div>
+
+            <!-- TABEL OBSERVASI PELAKSANAAN -->
+            <table style="margin-bottom: 12px;">
+              <thead>
+                <tr>
+                  <th style="width: 25px;">No</th>
+                  <th>Aspek yang Diamati (Observasi Pelaksanaan)</th>
+                  <th style="width: 50px;">Skala</th>
+                  <th style="width: 120px;">Bukti Pembelajaran</th>
+                  <th style="width: 120px;">Catatan Observer</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rowsObsHtml}
+                <tr style="font-weight: bold; background-color: #f8fafc;">
+                  <td colspan="2" style="text-align: right; padding-right: 10px;">Nilai Skor Observasi Pelaksanaan:</td>
+                  <td style="text-align: center; color: #1e3a8a; font-size: 10.5pt;">${selectedSup.skorObservasi}</td>
+                  <td colspan="2">${getPredikat(selectedSup.skorObservasi)}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div style="font-size: 9.5pt; margin-top: 8px; line-height: 1.35;">
+              <p><strong>16. Kelebihan Pelaksanaan:</strong> ${ko.kelebihan}</p>
+              <p><strong>17. Hal yang Perlu Ditingkatkan:</strong> ${ko.tingkatkan}</p>
+              <p><strong>18. Rekomendasi Sesuai Prinsip PM & KKA:</strong> ${ko.rekomendasi}</p>
+            </div>
+
+            <!-- REKAP SKOR AKHIR -->
+            <div style="margin: 16px 0; padding: 10px; border: 1.5px solid #000; background: #fafafa; font-size: 10pt; line-height: 1.4;">
+              <div style="font-weight: bold; text-transform: uppercase; margin-bottom: 4px;">Kesesuaian & Hasil Penilaian Akhir Supervisi:</div>
+              <div style="display: flex; justify-content: space-between;">
+                <span>Skor Telaah Perencanaan: <strong>${selectedSup.skorTelaah}</strong></span>
+                <span>Skor Observasi Pelaksanaan: <strong>${selectedSup.skorObservasi}</strong></span>
+                <span>Skor Akhir Gabungan: <strong style="font-size:11pt; color:#064e3b;">${selectedSup.skorAkhir} (${selectedSup.predikat})</strong></span>
+              </div>
+            </div>
+
+            <!-- TANDA TANGAN BERSAMA (GURU & KEPALA SEKOLAH) -->
+            <div style="margin-top: 30px; display: flex; justify-content: space-between; page-break-inside: avoid; font-size: 10pt;">
+              <div style="width: 220px; text-align: center;">
+                <div>Guru yang Disupervisi,</div>
+                <div style="height: 55px;"></div>
+                <div style="font-weight: bold; text-decoration: underline;">${g.nama}</div>
+                <div>NIP. ${g.nip}</div>
+              </div>
+              <div style="width: 240px; text-align: center;">
+                <div>${tglLaporan}</div>
+                <div>Kepala Sekolah / Supervisor,</div>
+                <div style="height: 55px;"></div>
+                <div style="font-weight: bold; text-decoration: underline;">${ksName}</div>
+                <div>NIP. ${nipKs}</div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // ====================================================
+    // EXPORT KE MICROSOFT WORD (.DOC)
+    // ====================================================
+    function exportToWord() {
+      const container = document.getElementById('report-container');
+      if (!container) return;
+
+      const actPeriod = getActivePeriodKey();
+      const schoolName = (db.settings.sekolah || "SEKOLAH").replace(/\s+/g, '_');
+      const filename = `Laporan_Supervisi_${schoolName}_${actPeriod.replace(/\s+/g, '')}.doc`;
+
+      const header = `
+        <html xmlns:o='urn:schemas-microsoft-com:office:office' 
+              xmlns:w='urn:schemas-microsoft-com:office:word' 
+              xmlns='http://www.w3.org/TR/REC-html40'>
+        <head>
+          <meta charset='utf-8'>
+          <title>Laporan Supervisi</title>
+          <style>
+            @page {
+              size: 21cm 29.7cm;
+              margin: 2.5cm 2cm 2.5cm 2.5cm;
+              mso-page-orientation: portrait;
+            }
+            body {
+              font-family: 'Times New Roman', serif;
+              font-size: 11pt;
+              line-height: 1.35;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              font-size: 10pt;
+              margin-bottom: 12pt;
+            }
+            th, td {
+              border: 1px solid #000;
+              padding: 5px 7px;
+              vertical-align: top;
+            }
+            th {
+              background-color: #f1f5f9;
+              font-weight: bold;
+              text-align: center;
+            }
+          </style>
+        </head>
+        <body>
+      `;
+
+      const footer = "</body></html>";
+      const content = container.innerHTML;
+      const fullHtml = header + content + footer;
+
+      const blob = new Blob(['\ufeff' + fullHtml], {
+        type: 'application/msword'
+      });
+
+      const url = URL.createObjectURL(blob);
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.href = url;
+      downloadAnchor.download = filename;
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      URL.revokeObjectURL(url);
+
+      showToast("Dokumen Word (.doc) berhasil diunduh!");
+    }
+
+    // ====================================================
+    // INITIALIZATION ON PAGE LOAD
+    // ====================================================
+    window.onload = function() {
+      updateLoginSchoolDropdown();
+      buildInstrumentTables();
+
+      const activeUser = localStorage.getItem("SI_SUPER_M_ACTIVE_USER");
+      if (activeUser) {
+        currentLoggedInUser = activeUser;
+        const overlay = document.getElementById('login-overlay');
+        const mainLayout = document.getElementById('app-main-layout');
+        const navSuperadmin = document.getElementById('nav-superadmin');
+        const activeSchoolBadge = document.getElementById('sidebar-active-school');
+
+        if (overlay) overlay.classList.add('hidden');
+        if (mainLayout) mainLayout.classList.remove('hidden');
+
+        let schoolName = "Satuan Pendidikan";
+        if (activeUser === 'superadmin') {
+          schoolName = "SUPER ADMIN MKKS";
+          if (navSuperadmin) navSuperadmin.classList.remove('hidden');
+        } else if (SCHOOL_CREDENTIALS[activeUser]) {
+          schoolName = SCHOOL_CREDENTIALS[activeUser].name;
+          if (navSuperadmin) navSuperadmin.classList.add('hidden');
+        }
+
+        if (activeSchoolBadge) activeSchoolBadge.innerText = schoolName;
+        loadDatabase();
+      }
+    };
+  </script>
+</body>
+</html>
